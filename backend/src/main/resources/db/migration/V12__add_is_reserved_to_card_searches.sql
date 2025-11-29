@@ -1,0 +1,1 @@
+ALTER TABLE card_searches ADD COLUMN is_reserved BOOLEAN DEFAULT FALSE NOT NULL;

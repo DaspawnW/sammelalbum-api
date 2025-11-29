@@ -1,0 +1,66 @@
+spring:
+  application:
+    name: sammelalbum
+  datasource:
+    url: jdbc:postgresql://localhost:5432/sammelalbum
+    username: user
+    password: password
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  mail:
+    host: localhost
+    port: 1025
+    username:
+    password:
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+
+logging:
+  level:
+    org:
+      springframework:
+        web: INFO
+      hibernate:
+        SQL: DEBUG
+
+app:
+  validation-codes:
+    - CODE-1111
+    - CODE-2222
+    - CODE-3333
+    - CODE-4444
+    - CODE-5555
+    - CODE-6666
+    - CODE-7777
+    - CODE-8888
+    - CODE-9999
+    - CODE-0000
+  jwt:
+    secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970 # This looks like hex, but let's replace with a clear Base64 for safety if decoder expects Base64
+    # Actually, let's use a generated Base64 key for 256 bits
+    secret: K7gNU3kef8297wnsJvbdw/Ba49bmGW76NFh70fE0ZeM=
+    expiration: 86400000 # 1 day
+
+springdoc:
+  api-docs:
+    path: /api/v3/api-docs
+  swagger-ui:
+    path: /api/swagger-ui.html
