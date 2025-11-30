@@ -20,54 +20,59 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.util.Collections;
 
 @SpringBootTest(properties = {
-        "app.validation-codes=CODE-1111",
-        "app.jwt.secret=K7gNU3kef8297wnsJvbdw/Ba49bmGW76NFh70fE0ZeM=",
-        "app.jwt.expiration=86400000"
+                "app.validation-codes=CODE-1111",
+                "app.jwt.secret=K7gNU3kef8297wnsJvbdw/Ba49bmGW76NFh70fE0ZeM=",
+                "app.jwt.expiration=86400000"
 })
 @AutoConfigureMockMvc
 class UserControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+        @Autowired
+        private MockMvc mockMvc;
 
-    @Autowired
-    private UserRepository userRepository;
+        @Autowired
+        private UserRepository userRepository;
 
-    @BeforeEach
-    void setUp() {
-        userRepository.deleteAll();
-    }
+        @Autowired
+        private com.daspawnw.sammelalbum.repository.CredentialsRepository credentialsRepository;
 
-    @Test
-    void getMe_ShouldReturnCurrentUser_WhenAuthenticated() throws Exception {
-        User user = User.builder()
-                .firstname("Test")
-                .lastname("User")
-                .mail("test@example.com")
-                .contact("test@contact.com")
-                .build();
-        user = userRepository.save(user);
+        @BeforeEach
+        void setUp() {
+                credentialsRepository.deleteAll();
+                userRepository.deleteAll();
+        }
 
-        CustomUserDetails userDetails = new CustomUserDetails(
-                user.getMail(),
-                "password",
-                Collections.emptyList(),
-                user.getId());
+        @Test
+        void getMe_ShouldReturnCurrentUser_WhenAuthenticated() throws Exception {
+                User user = User.builder()
+                                .firstname("Test")
+                                .lastname("User")
+                                .mail("test@example.com")
+                                .contact("test@contact.com")
+                                .build();
+                user = userRepository.save(user);
 
-        SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()));
+                CustomUserDetails userDetails = new CustomUserDetails(
+                                user.getMail(),
+                                "password",
+                                Collections.emptyList(),
+                                user.getId());
 
-        mockMvc.perform(get("/api/user/me"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstname").value("Test"))
-                .andExpect(jsonPath("$.lastname").value("User"))
-                .andExpect(jsonPath("$.mail").value("test@example.com"))
-                .andExpect(jsonPath("$.contact").value("test@contact.com"));
-    }
+                SecurityContextHolder.getContext().setAuthentication(
+                                new UsernamePasswordAuthenticationToken(userDetails, null,
+                                                userDetails.getAuthorities()));
 
-    @Test
-    void getMe_ShouldReturn403_WhenUnauthenticated() throws Exception {
-        mockMvc.perform(get("/api/user/me"))
-                .andExpect(status().isForbidden());
-    }
+                mockMvc.perform(get("/api/user/me"))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.firstname").value("Test"))
+                                .andExpect(jsonPath("$.lastname").value("User"))
+                                .andExpect(jsonPath("$.mail").value("test@example.com"))
+                                .andExpect(jsonPath("$.contact").value("test@contact.com"));
+        }
+
+        @Test
+        void getMe_ShouldReturn403_WhenUnauthenticated() throws Exception {
+                mockMvc.perform(get("/api/user/me"))
+                                .andExpect(status().isForbidden());
+        }
 }
