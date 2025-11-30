@@ -42,6 +42,18 @@ public class ExchangeRequest {
     @Column(nullable = false)
     private ExchangeStatus status;
 
+    @Column(name = "requester_closed", nullable = false)
+    @Builder.Default
+    private Boolean requesterClosed = false;
+
+    @Column(name = "offerer_closed", nullable = false)
+    @Builder.Default
+    private Boolean offererClosed = false;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "cancellation_reason")
+    private CancellationReason cancellationReason;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;

@@ -1,0 +1,2 @@
+ALTER TABLE exchange_requests ADD COLUMN requester_closed BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE exchange_requests ADD COLUMN offerer_closed BOOLEAN NOT NULL DEFAULT FALSE;

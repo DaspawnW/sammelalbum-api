@@ -70,6 +70,20 @@ public class ExchangeController {
         }
     }
 
+    @PutMapping("/{id}/close")
+    public ResponseEntity<Void> closeExchangeRequest(
+            @PathVariable Long id,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        try {
+            exchangeService.closeExchangeRequest(id, userDetails.getUserId());
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (SecurityException e) {
+            return ResponseEntity.status(403).build();
+        }
+    }
+
     @GetMapping("/sent")
     public ResponseEntity<List<ExchangeRequestDto>> getSentRequests(
             @AuthenticationPrincipal CustomUserDetails userDetails) {

@@ -2,6 +2,7 @@ package com.daspawnw.sammelalbum.dto;
 
 import com.daspawnw.sammelalbum.model.ExchangeStatus;
 import com.daspawnw.sammelalbum.model.ExchangeType;
+import com.daspawnw.sammelalbum.model.CancellationReason;
 import lombok.Builder;
 import lombok.Data;
 
@@ -17,6 +18,7 @@ public class ExchangeRequestDto {
     private Long offeredStickerId;
     private ExchangeType exchangeType;
     private ExchangeStatus status;
+    private CancellationReason cancellationReason;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

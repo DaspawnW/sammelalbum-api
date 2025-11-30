@@ -2,6 +2,7 @@ package com.daspawnw.sammelalbum.service;
 
 import com.daspawnw.sammelalbum.model.ExchangeRequest;
 import com.daspawnw.sammelalbum.model.ExchangeStatus;
+import com.daspawnw.sammelalbum.model.CancellationReason;
 import com.daspawnw.sammelalbum.repository.CardOfferRepository;
 import com.daspawnw.sammelalbum.repository.ExchangeRequestRepository;
 import com.daspawnw.sammelalbum.model.ExchangeType;
@@ -301,7 +302,88 @@ public class ExchangeService {
             }
         }
 
+        // Set cancellation reason based on who declined
+        if (request.getRequesterId().equals(currentUserId)) {
+            request.setCancellationReason(CancellationReason.REQUESTER_CANCELED);
+        } else {
+            request.setCancellationReason(CancellationReason.OFFERER_CANCELED);
+        }
+
         request.setStatus(ExchangeStatus.EXCHANGE_CANCELED);
+        exchangeRequestRepository.save(request);
+    }
+
+    @Transactional
+    public void closeExchangeRequest(Long requestId, Long currentUserId) {
+        ExchangeRequest request = exchangeRequestRepository.findById(requestId)
+                .orElseThrow(() -> new IllegalArgumentException("Exchange request not found"));
+
+        // Validate authorization
+        boolean isRequester = request.getRequesterId().equals(currentUserId);
+        boolean isOfferer = request.getOffererId().equals(currentUserId);
+
+        if (!isRequester && !isOfferer) {
+            throw new SecurityException("You are not authorized to close this request");
+        }
+
+        // Only allow closing if exchange was accepted
+        if (request.getStatus() != ExchangeStatus.EXCHANGE_INTERREST) {
+            throw new IllegalStateException("Request can only be closed when in EXCHANGE_INTERREST status");
+        }
+
+        // Requester closing logic
+        if (isRequester && !request.getRequesterClosed()) {
+            // Delete Requester's CardSearch for RequestedSticker (they found it)
+            cardSearchRepository
+                    .findByUserIdAndStickerIdIn(request.getRequesterId(), List.of(request.getRequestedStickerId()))
+                    .stream()
+                    .filter(com.daspawnw.sammelalbum.model.CardSearch::getIsReserved)
+                    .findFirst()
+                    .ifPresent(cardSearchRepository::delete);
+
+            // If EXCHANGE type, delete Requester's CardOffer for OfferedSticker (they gave
+            // it away)
+            if (request.getExchangeType() == ExchangeType.EXCHANGE) {
+                cardOfferRepository
+                        .findByUserIdAndStickerIdIn(request.getRequesterId(), List.of(request.getOfferedStickerId()))
+                        .stream()
+                        .filter(com.daspawnw.sammelalbum.model.CardOffer::getIsReserved)
+                        .findFirst()
+                        .ifPresent(cardOfferRepository::delete);
+            }
+
+            request.setRequesterClosed(true);
+        }
+
+        // Offerer closing logic
+        if (isOfferer && !request.getOffererClosed()) {
+            // Delete Offerer's CardOffer for RequestedSticker (they gave it away)
+            cardOfferRepository
+                    .findByUserIdAndStickerIdIn(request.getOffererId(), List.of(request.getRequestedStickerId()))
+                    .stream()
+                    .filter(com.daspawnw.sammelalbum.model.CardOffer::getIsReserved)
+                    .findFirst()
+                    .ifPresent(cardOfferRepository::delete);
+
+            // If EXCHANGE type, delete Offerer's CardSearch for OfferedSticker (they found
+            // it)
+            if (request.getExchangeType() == ExchangeType.EXCHANGE) {
+                cardSearchRepository
+                        .findByUserIdAndStickerIdIn(request.getOffererId(), List.of(request.getOfferedStickerId()))
+                        .stream()
+                        .filter(com.daspawnw.sammelalbum.model.CardSearch::getIsReserved)
+                        .findFirst()
+                        .ifPresent(cardSearchRepository::delete);
+            }
+
+            request.setOffererClosed(true);
+        }
+
+        // If both parties have closed, mark as completed
+        if (request.getRequesterClosed() && request.getOffererClosed()) {
+            request.setStatus(ExchangeStatus.EXCHANGE_COMPLETED);
+        }
+
         exchangeRequestRepository.save(request);
     }
 
@@ -370,6 +452,7 @@ public class ExchangeService {
                 .offeredStickerId(request.getOfferedStickerId())
                 .exchangeType(request.getExchangeType())
                 .status(request.getStatus())
+                .cancellationReason(request.getCancellationReason())
                 .createdAt(request.getCreatedAt())
                 .updatedAt(request.getUpdatedAt());
 
