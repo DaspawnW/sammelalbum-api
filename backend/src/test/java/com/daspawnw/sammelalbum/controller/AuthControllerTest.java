@@ -39,6 +39,12 @@ class AuthControllerTest {
         private CredentialsRepository credentialsRepository;
 
         @Autowired
+        private com.daspawnw.sammelalbum.repository.ExchangeRequestRepository exchangeRequestRepository;
+
+        @Autowired
+        private com.daspawnw.sammelalbum.repository.CardSearchRepository cardSearchRepository;
+
+        @Autowired
         private CardOfferRepository cardOfferRepository;
 
         @Autowired
@@ -46,6 +52,8 @@ class AuthControllerTest {
 
         @BeforeEach
         void setUp() {
+                exchangeRequestRepository.deleteAll();
+                cardSearchRepository.deleteAll();
                 cardOfferRepository.deleteAll();
                 credentialsRepository.deleteAll();
                 userRepository.deleteAll();
