@@ -42,6 +42,19 @@ public class ExchangeRequest {
     @Column(nullable = false)
     private ExchangeStatus status;
 
+    // Foreign key references to specific cards involved in the exchange
+    @Column(name = "offerer_card_offer_id")
+    private Long offererCardOfferId;
+
+    @Column(name = "requester_card_search_id")
+    private Long requesterCardSearchId;
+
+    @Column(name = "requester_card_offer_id")
+    private Long requesterCardOfferId;
+
+    @Column(name = "offerer_card_search_id")
+    private Long offererCardSearchId;
+
     @Column(name = "requester_closed", nullable = false)
     @Builder.Default
     private Boolean requesterClosed = false;

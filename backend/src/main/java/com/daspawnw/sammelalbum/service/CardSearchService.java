@@ -7,6 +7,7 @@ import com.daspawnw.sammelalbum.model.CardSearch;
 import com.daspawnw.sammelalbum.repository.CardSearchRepository;
 import com.daspawnw.sammelalbum.repository.StickerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,11 +15,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class CardSearchService {
 
     private final CardSearchRepository cardSearchRepository;
     private final StickerRepository stickerRepository;
+    private final ExchangeService exchangeService;
+
+    public CardSearchService(CardSearchRepository cardSearchRepository,
+            StickerRepository stickerRepository,
+            @Lazy ExchangeService exchangeService) {
+        this.cardSearchRepository = cardSearchRepository;
+        this.stickerRepository = stickerRepository;
+        this.exchangeService = exchangeService;
+    }
 
     public List<CardSearchResponse> getSearches(Long userId) {
         return cardSearchRepository.findAllByUserId(userId).stream()
@@ -58,6 +67,9 @@ public class CardSearchService {
         if (!cardSearch.getUserId().equals(userId)) {
             throw new SecurityException("Not authorized to delete this search");
         }
+
+        // Cancel any exchanges that reference this card
+        exchangeService.handleCardSearchDeletion(searchId);
 
         cardSearchRepository.delete(cardSearch);
     }

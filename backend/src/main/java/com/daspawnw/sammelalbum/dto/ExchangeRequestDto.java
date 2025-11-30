@@ -21,6 +21,8 @@ public class ExchangeRequestDto {
     private CancellationReason cancellationReason;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private Boolean requesterClosed;
+    private Boolean offererClosed;
 
     // Conditional fields
     private String partnerFirstname;

@@ -8,6 +8,7 @@ import com.daspawnw.sammelalbum.model.CardOffer;
 import com.daspawnw.sammelalbum.repository.CardOfferRepository;
 import com.daspawnw.sammelalbum.repository.StickerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,11 +19,19 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class CardOfferService {
 
     private final CardOfferRepository cardOfferRepository;
     private final StickerRepository stickerRepository;
+    private final ExchangeService exchangeService;
+
+    public CardOfferService(CardOfferRepository cardOfferRepository,
+            StickerRepository stickerRepository,
+            @Lazy ExchangeService exchangeService) {
+        this.cardOfferRepository = cardOfferRepository;
+        this.stickerRepository = stickerRepository;
+        this.exchangeService = exchangeService;
+    }
 
     public List<CardOfferResponse> getOffers(Long userId) {
         return cardOfferRepository.findAllByUserId(userId).stream()
@@ -68,6 +77,9 @@ public class CardOfferService {
         if (!cardOffer.getUserId().equals(userId)) {
             throw new SecurityException("Not authorized to delete this offer");
         }
+
+        // Cancel any exchanges that reference this card
+        exchangeService.handleCardOfferDeletion(offerId);
 
         cardOfferRepository.delete(cardOffer);
     }

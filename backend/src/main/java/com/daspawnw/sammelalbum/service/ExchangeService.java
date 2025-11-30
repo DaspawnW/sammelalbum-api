@@ -178,6 +178,9 @@ public class ExchangeService {
         offererCard.setIsReserved(true);
         cardOfferRepository.save(offererCard);
 
+        // Set FK reference
+        request.setOffererCardOfferId(offererCard.getId());
+
         // Requester wants CardSearch
         com.daspawnw.sammelalbum.model.CardSearch requesterSearch = cardSearchRepository
                 .findByUserIdAndStickerIdIn(request.getRequesterId(), List.of(request.getRequestedStickerId()))
@@ -190,6 +193,9 @@ public class ExchangeService {
 
         requesterSearch.setIsReserved(true);
         cardSearchRepository.save(requesterSearch);
+
+        // Set FK reference
+        request.setRequesterCardSearchId(requesterSearch.getId());
 
         // 2. If EXCHANGE type, Offered Sticker (Requester gives, Offerer wants)
         if (request.getExchangeType() == ExchangeType.EXCHANGE) {
@@ -205,6 +211,9 @@ public class ExchangeService {
             requesterCard.setIsReserved(true);
             cardOfferRepository.save(requesterCard);
 
+            // Set FK reference
+            request.setRequesterCardOfferId(requesterCard.getId());
+
             // Offerer wants CardSearch
             com.daspawnw.sammelalbum.model.CardSearch offererSearch = cardSearchRepository
                     .findByUserIdAndStickerIdIn(currentUserId, List.of(request.getOfferedStickerId()))
@@ -217,6 +226,9 @@ public class ExchangeService {
 
             offererSearch.setIsReserved(true);
             cardSearchRepository.save(offererSearch);
+
+            // Set FK reference
+            request.setOffererCardSearchId(offererSearch.getId());
         }
         // --- Reservation Logic End ---
 
@@ -250,55 +262,42 @@ public class ExchangeService {
         }
 
         if (request.getStatus() == ExchangeStatus.EXCHANGE_INTERREST) {
-            // Revert reservations
-            // 1. Requested Sticker (The sticker the Requester WANTS and Offerer GIVES)
-            // Offerer's Offer for RequestedSticker
-            cardOfferRepository
-                    .findByUserIdAndStickerIdIn(request.getOffererId(), List.of(request.getRequestedStickerId()))
-                    .stream()
-                    .filter(com.daspawnw.sammelalbum.model.CardOffer::getIsReserved) // Find reserved
-                    .findFirst() // Only unreserve ONE item
-                    .ifPresent(offer -> {
-                        offer.setIsReserved(false);
-                        cardOfferRepository.save(offer);
-                    });
-
-            // Requester's Search for RequestedSticker
-            cardSearchRepository
-                    .findByUserIdAndStickerIdIn(request.getRequesterId(), List.of(request.getRequestedStickerId()))
-                    .stream()
-                    .filter(com.daspawnw.sammelalbum.model.CardSearch::getIsReserved) // Find reserved
-                    .findFirst() // Only unreserve ONE item
-                    .ifPresent(search -> {
-                        search.setIsReserved(false);
-                        cardSearchRepository.save(search);
-                    });
-
-            // 2. If EXCHANGE type, Offered Sticker (The sticker the Requester GIVES and
-            // Offerer WANTS)
-            // This is a DIFFERENT sticker than the Requested Sticker (usually)
-            if (request.getExchangeType() == ExchangeType.EXCHANGE) {
-                // Requester's Offer for OfferedSticker
-                cardOfferRepository
-                        .findByUserIdAndStickerIdIn(request.getRequesterId(), List.of(request.getOfferedStickerId()))
-                        .stream()
-                        .filter(com.daspawnw.sammelalbum.model.CardOffer::getIsReserved) // Find reserved
-                        .findFirst() // Only unreserve ONE item
+            // Revert reservations using FK references
+            // 1. Offerer's CardOffer
+            if (request.getOffererCardOfferId() != null) {
+                cardOfferRepository.findById(request.getOffererCardOfferId())
                         .ifPresent(offer -> {
                             offer.setIsReserved(false);
                             cardOfferRepository.save(offer);
                         });
+            }
 
-                // Offerer's Search for OfferedSticker
-                cardSearchRepository
-                        .findByUserIdAndStickerIdIn(request.getOffererId(), List.of(request.getOfferedStickerId()))
-                        .stream()
-                        .filter(com.daspawnw.sammelalbum.model.CardSearch::getIsReserved) // Find reserved
-                        .findFirst() // Only unreserve ONE item
+            // 2. Requester's CardSearch
+            if (request.getRequesterCardSearchId() != null) {
+                cardSearchRepository.findById(request.getRequesterCardSearchId())
                         .ifPresent(search -> {
                             search.setIsReserved(false);
                             cardSearchRepository.save(search);
                         });
+            }
+
+            // 3. For EXCHANGE type: Requester's CardOffer and Offerer's CardSearch
+            if (request.getExchangeType() == ExchangeType.EXCHANGE) {
+                if (request.getRequesterCardOfferId() != null) {
+                    cardOfferRepository.findById(request.getRequesterCardOfferId())
+                            .ifPresent(offer -> {
+                                offer.setIsReserved(false);
+                                cardOfferRepository.save(offer);
+                            });
+                }
+
+                if (request.getOffererCardSearchId() != null) {
+                    cardSearchRepository.findById(request.getOffererCardSearchId())
+                            .ifPresent(search -> {
+                                search.setIsReserved(false);
+                                cardSearchRepository.save(search);
+                            });
+                }
             }
         }
 
@@ -333,23 +332,14 @@ public class ExchangeService {
 
         // Requester closing logic
         if (isRequester && !request.getRequesterClosed()) {
-            // Delete Requester's CardSearch for RequestedSticker (they found it)
-            cardSearchRepository
-                    .findByUserIdAndStickerIdIn(request.getRequesterId(), List.of(request.getRequestedStickerId()))
-                    .stream()
-                    .filter(com.daspawnw.sammelalbum.model.CardSearch::getIsReserved)
-                    .findFirst()
-                    .ifPresent(cardSearchRepository::delete);
+            // Delete Requester's CardSearch using FK reference
+            if (request.getRequesterCardSearchId() != null) {
+                cardSearchRepository.deleteById(request.getRequesterCardSearchId());
+            }
 
-            // If EXCHANGE type, delete Requester's CardOffer for OfferedSticker (they gave
-            // it away)
-            if (request.getExchangeType() == ExchangeType.EXCHANGE) {
-                cardOfferRepository
-                        .findByUserIdAndStickerIdIn(request.getRequesterId(), List.of(request.getOfferedStickerId()))
-                        .stream()
-                        .filter(com.daspawnw.sammelalbum.model.CardOffer::getIsReserved)
-                        .findFirst()
-                        .ifPresent(cardOfferRepository::delete);
+            // If EXCHANGE type, delete Requester's CardOffer using FK reference
+            if (request.getExchangeType() == ExchangeType.EXCHANGE && request.getRequesterCardOfferId() != null) {
+                cardOfferRepository.deleteById(request.getRequesterCardOfferId());
             }
 
             request.setRequesterClosed(true);
@@ -357,23 +347,14 @@ public class ExchangeService {
 
         // Offerer closing logic
         if (isOfferer && !request.getOffererClosed()) {
-            // Delete Offerer's CardOffer for RequestedSticker (they gave it away)
-            cardOfferRepository
-                    .findByUserIdAndStickerIdIn(request.getOffererId(), List.of(request.getRequestedStickerId()))
-                    .stream()
-                    .filter(com.daspawnw.sammelalbum.model.CardOffer::getIsReserved)
-                    .findFirst()
-                    .ifPresent(cardOfferRepository::delete);
+            // Delete Offerer's CardOffer using FK reference
+            if (request.getOffererCardOfferId() != null) {
+                cardOfferRepository.deleteById(request.getOffererCardOfferId());
+            }
 
-            // If EXCHANGE type, delete Offerer's CardSearch for OfferedSticker (they found
-            // it)
-            if (request.getExchangeType() == ExchangeType.EXCHANGE) {
-                cardSearchRepository
-                        .findByUserIdAndStickerIdIn(request.getOffererId(), List.of(request.getOfferedStickerId()))
-                        .stream()
-                        .filter(com.daspawnw.sammelalbum.model.CardSearch::getIsReserved)
-                        .findFirst()
-                        .ifPresent(cardSearchRepository::delete);
+            // If EXCHANGE type, delete Offerer's CardSearch using FK reference
+            if (request.getExchangeType() == ExchangeType.EXCHANGE && request.getOffererCardSearchId() != null) {
+                cardSearchRepository.deleteById(request.getOffererCardSearchId());
             }
 
             request.setOffererClosed(true);
@@ -454,7 +435,10 @@ public class ExchangeService {
                 .status(request.getStatus())
                 .cancellationReason(request.getCancellationReason())
                 .createdAt(request.getCreatedAt())
-                .updatedAt(request.getUpdatedAt());
+                .createdAt(request.getCreatedAt())
+                .updatedAt(request.getUpdatedAt())
+                .requesterClosed(request.getRequesterClosed())
+                .offererClosed(request.getOffererClosed());
 
         if (request.getStatus() == ExchangeStatus.EXCHANGE_INTERREST && partner != null) {
             builder.partnerFirstname(partner.getFirstname());
@@ -463,5 +447,177 @@ public class ExchangeService {
         }
 
         return builder.build();
+    }
+
+    /**
+     * Handle CardOffer deletion - cancel any exchanges that reference this card OR
+     * cancel exchanges if this was the last card of this sticker for this user
+     */
+    @Transactional
+    public void handleCardOfferDeletion(Long cardOfferId) {
+        // First, get the card being deleted to know userId and stickerId
+        com.daspawnw.sammelalbum.model.CardOffer deletedCard = cardOfferRepository.findById(cardOfferId)
+                .orElse(null);
+
+        if (deletedCard == null) {
+            return; // Card already deleted
+        }
+
+        Long userId = deletedCard.getUserId();
+        Long stickerId = deletedCard.getStickerId();
+        boolean isReserved = deletedCard.getIsReserved();
+
+        // Find all exchanges that reference this specific CardOffer (reserved
+        // exchanges)
+        List<ExchangeRequest> affectedExchanges = new ArrayList<>();
+        affectedExchanges.addAll(exchangeRequestRepository.findByOffererCardOfferId(cardOfferId));
+        affectedExchanges.addAll(exchangeRequestRepository.findByRequesterCardOfferId(cardOfferId));
+
+        // Cancel exchanges that directly reference this card (it's reserved)
+        for (ExchangeRequest exchange : affectedExchanges) {
+            CancellationReason reason = CancellationReason.OFFERED_CARD_REMOVED_BY_USER;
+            unreserveCardsExcept(exchange, cardOfferId, null);
+            exchange.setStatus(ExchangeStatus.EXCHANGE_CANCELED);
+            exchange.setCancellationReason(reason);
+            exchangeRequestRepository.save(exchange);
+        }
+
+        // If the card is NOT reserved, check if there are other cards left
+        if (!isReserved) {
+            // Check if there are any remaining CardOffers for this user/sticker combination
+            List<com.daspawnw.sammelalbum.model.CardOffer> remainingOffers = cardOfferRepository
+                    .findByUserIdAndStickerIdIn(userId, List.of(stickerId))
+                    .stream()
+                    .filter(offer -> !offer.getId().equals(cardOfferId)) // Exclude the one being deleted
+                    .collect(Collectors.toList());
+
+            // If no cards remain, cancel all pending exchanges for this user/sticker
+            if (remainingOffers.isEmpty()) {
+                // Find all INITIAL or MAIL_SEND exchanges where this user is the offerer for
+                // this sticker
+                List<ExchangeRequest> pendingExchanges = exchangeRequestRepository.findByOffererId(userId)
+                        .stream()
+                        .filter(ex -> ex.getRequestedStickerId().equals(stickerId))
+                        .filter(ex -> ex.getStatus() == ExchangeStatus.INITIAL
+                                || ex.getStatus() == ExchangeStatus.MAIL_SEND)
+                        .filter(ex -> ex.getOffererCardOfferId() == null) // Not yet reserved
+                        .collect(Collectors.toList());
+
+                for (ExchangeRequest exchange : pendingExchanges) {
+                    exchange.setStatus(ExchangeStatus.EXCHANGE_CANCELED);
+                    exchange.setCancellationReason(CancellationReason.OFFERED_CARD_REMOVED_BY_USER);
+                    exchangeRequestRepository.save(exchange);
+                }
+            }
+        }
+    }
+
+    /**
+     * Handle CardSearch deletion - cancel any exchanges that reference this card OR
+     * cancel exchanges if this was the last search of this sticker for this user
+     */
+    @Transactional
+    public void handleCardSearchDeletion(Long cardSearchId) {
+        // First, get the card being deleted to know userId and stickerId
+        com.daspawnw.sammelalbum.model.CardSearch deletedSearch = cardSearchRepository.findById(cardSearchId)
+                .orElse(null);
+
+        if (deletedSearch == null) {
+            return; // Search already deleted
+        }
+
+        Long userId = deletedSearch.getUserId();
+        Long stickerId = deletedSearch.getStickerId();
+        boolean isReserved = deletedSearch.getIsReserved();
+
+        // Find all exchanges that reference this specific CardSearch (reserved
+        // exchanges)
+        List<ExchangeRequest> affectedExchanges = new ArrayList<>();
+        affectedExchanges.addAll(exchangeRequestRepository.findByRequesterCardSearchId(cardSearchId));
+        affectedExchanges.addAll(exchangeRequestRepository.findByOffererCardSearchId(cardSearchId));
+
+        // Cancel exchanges that directly reference this card (it's reserved)
+        for (ExchangeRequest exchange : affectedExchanges) {
+            CancellationReason reason = CancellationReason.SEARCH_CARD_REMOVED_BY_USER;
+            unreserveCardsExcept(exchange, null, cardSearchId);
+            exchange.setStatus(ExchangeStatus.EXCHANGE_CANCELED);
+            exchange.setCancellationReason(reason);
+            exchangeRequestRepository.save(exchange);
+        }
+
+        // If the search is NOT reserved, check if there are other searches left
+        if (!isReserved) {
+            // Check if there are any remaining CardSearches for this user/sticker
+            // combination
+            List<com.daspawnw.sammelalbum.model.CardSearch> remainingSearches = cardSearchRepository
+                    .findByUserIdAndStickerIdIn(userId, List.of(stickerId))
+                    .stream()
+                    .filter(search -> !search.getId().equals(cardSearchId)) // Exclude the one being deleted
+                    .collect(Collectors.toList());
+
+            // If no searches remain, cancel all pending exchanges for this user/sticker
+            if (remainingSearches.isEmpty()) {
+                // Find all INITIAL or MAIL_SEND exchanges where this user is the requester for
+                // this sticker
+                List<ExchangeRequest> pendingExchanges = exchangeRequestRepository.findByRequesterId(userId)
+                        .stream()
+                        .filter(ex -> ex.getRequestedStickerId().equals(stickerId))
+                        .filter(ex -> ex.getStatus() == ExchangeStatus.INITIAL
+                                || ex.getStatus() == ExchangeStatus.MAIL_SEND)
+                        .filter(ex -> ex.getRequesterCardSearchId() == null) // Not yet reserved
+                        .collect(Collectors.toList());
+
+                for (ExchangeRequest exchange : pendingExchanges) {
+                    exchange.setStatus(ExchangeStatus.EXCHANGE_CANCELED);
+                    exchange.setCancellationReason(CancellationReason.SEARCH_CARD_REMOVED_BY_USER);
+                    exchangeRequestRepository.save(exchange);
+                }
+            }
+        }
+    }
+
+    /**
+     * Unreserve all cards in an exchange except the ones being deleted
+     */
+    private void unreserveCardsExcept(ExchangeRequest exchange, Long deletedOfferId, Long deletedSearchId) {
+        // Unreserve offerer's card offer (if not the one being deleted)
+        if (exchange.getOffererCardOfferId() != null && !exchange.getOffererCardOfferId().equals(deletedOfferId)) {
+            cardOfferRepository.findById(exchange.getOffererCardOfferId())
+                    .ifPresent(offer -> {
+                        offer.setIsReserved(false);
+                        cardOfferRepository.save(offer);
+                    });
+        }
+
+        // Unreserve requester's card search (if not the one being deleted)
+        if (exchange.getRequesterCardSearchId() != null
+                && !exchange.getRequesterCardSearchId().equals(deletedSearchId)) {
+            cardSearchRepository.findById(exchange.getRequesterCardSearchId())
+                    .ifPresent(search -> {
+                        search.setIsReserved(false);
+                        cardSearchRepository.save(search);
+                    });
+        }
+
+        // For EXCHANGE type: unreserve requester's offer and offerer's search
+        if (exchange.getExchangeType() == ExchangeType.EXCHANGE) {
+            if (exchange.getRequesterCardOfferId() != null
+                    && !exchange.getRequesterCardOfferId().equals(deletedOfferId)) {
+                cardOfferRepository.findById(exchange.getRequesterCardOfferId())
+                        .ifPresent(offer -> {
+                            offer.setIsReserved(false);
+                            cardOfferRepository.save(offer);
+                        });
+            }
+
+            if (exchange.getOffererCardSearchId() != null
+                    && !exchange.getOffererCardSearchId().equals(deletedSearchId)) {
+                cardSearchRepository.findById(exchange.getOffererCardSearchId())
+                        .ifPresent(search -> {
+                            search.setIsReserved(false);
+                            cardSearchRepository.save(search);
+                        });
+            }
+        }
     }
 }

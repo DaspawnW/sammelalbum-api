@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 public class MatchService {
 
     private final CardOfferRepository cardOfferRepository;
+    private final com.daspawnw.sammelalbum.repository.CardSearchRepository cardSearchRepository;
 
     @Transactional(readOnly = true)
     public Page<MatchResponse> getFreebieMatches(Long userId, Pageable pageable) {
@@ -50,7 +51,8 @@ public class MatchService {
                 .map(MatchProjection::getUserId)
                 .toList();
 
-        Map<Long, List<MatchStickerDto>> detailsMap = cardOfferRepository
+        // Items Requested: What partner offers that I want
+        Map<Long, List<MatchStickerDto>> requestedMap = cardOfferRepository
                 .findMatchingOffers(currentUserId, userIds, isFreebie, isPayed, isExchange).stream()
                 .collect(Collectors.groupingBy(
                         CardOffer::getUserId,
@@ -60,9 +62,25 @@ public class MatchService {
                                         offer.getSticker().getName()),
                                 Collectors.toList())));
 
+        // Items Offered: What I offer that partner wants (only for exchange)
+        Map<Long, List<MatchStickerDto>> offeredMap;
+        if (isExchange) {
+            offeredMap = cardSearchRepository.findMatchingSearches(userIds, currentUserId).stream()
+                    .collect(Collectors.groupingBy(
+                            com.daspawnw.sammelalbum.model.CardSearch::getUserId,
+                            Collectors.mapping(
+                                    search -> new MatchStickerDto(
+                                            search.getSticker().getId(),
+                                            search.getSticker().getName()),
+                                    Collectors.toList())));
+        } else {
+            offeredMap = Collections.emptyMap();
+        }
+
         return matches.map(projection -> {
             MatchResponse response = mapToResponse(projection);
-            response.setMatches(detailsMap.getOrDefault(projection.getUserId(), Collections.emptyList()));
+            response.setItemsRequested(requestedMap.getOrDefault(projection.getUserId(), Collections.emptyList()));
+            response.setItemsOffered(offeredMap.getOrDefault(projection.getUserId(), Collections.emptyList()));
             return response;
         });
     }
@@ -70,8 +88,9 @@ public class MatchService {
     private MatchResponse mapToResponse(MatchProjection projection) {
         return MatchResponse.builder()
                 .userId(projection.getUserId())
-                .matchCount(projection.getMatchCount())
-                .matches(Collections.emptyList())
+                .exchangeableCount(projection.getMatchCount())
+                .itemsRequested(Collections.emptyList())
+                .itemsOffered(Collections.emptyList())
                 .build();
     }
 }

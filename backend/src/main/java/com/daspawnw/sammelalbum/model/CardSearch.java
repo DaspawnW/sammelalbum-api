@@ -24,6 +24,10 @@ public class CardSearch {
     @Column(name = "sticker_id", nullable = false)
     private Long stickerId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sticker_id", insertable = false, updatable = false)
+    private Sticker sticker;
+
     @Column(name = "is_reserved", nullable = false)
     @Builder.Default
     private Boolean isReserved = false;

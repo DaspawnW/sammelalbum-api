@@ -1,5 +1,6 @@
 package com.daspawnw.sammelalbum.service;
 
+import com.daspawnw.sammelalbum.config.AppProperties;
 import com.daspawnw.sammelalbum.dto.AuthDtos.AuthResponse;
 import com.daspawnw.sammelalbum.dto.AuthDtos.LoginRequest;
 import com.daspawnw.sammelalbum.dto.AuthDtos.RegisterRequest;
@@ -39,6 +40,9 @@ class AuthServiceTest {
     @Mock
     private AuthenticationManager authenticationManager;
 
+    @Mock
+    private AppProperties appProperties;
+
     @InjectMocks
     private AuthService authService;
 
@@ -47,7 +51,6 @@ class AuthServiceTest {
 
     @BeforeEach
     void setUp() {
-        ReflectionTestUtils.setField(authService, "validationCodes", List.of("CODE-1111"));
 
         validRegisterRequest = RegisterRequest.builder()
                 .username("testuser")
@@ -76,6 +79,7 @@ class AuthServiceTest {
         when(credentialsRepository.findByUsername(any())).thenReturn(Optional.empty());
         when(userRepository.findByMail(any())).thenReturn(Optional.empty());
         when(passwordEncoder.encode(any())).thenReturn("hashedPassword");
+        when(appProperties.getValidationCodes()).thenReturn(List.of("CODE-1111"));
 
         when(credentialsRepository.save(any(Credentials.class))).thenAnswer(invocation -> {
             Credentials c = invocation.getArgument(0);
@@ -99,6 +103,7 @@ class AuthServiceTest {
 
     @Test
     void register_InvalidCode() {
+        when(appProperties.getValidationCodes()).thenReturn(List.of("CODE-1111"));
         validRegisterRequest.setValidationCode("INVALID-CODE");
 
         assertThrows(IllegalArgumentException.class, () -> authService.register(validRegisterRequest));

@@ -89,6 +89,8 @@ public class ExchangeViewIntegrationTest {
                 assertNotNull(dto2.getPartnerContact());
                 assertEquals("Perfect", dto2.getPartnerFirstname()); // User 4 firstname is "Perfect"
                 assertEquals("david@contact.com", dto2.getPartnerContact());
+                assertFalse(dto2.getRequesterClosed());
+                assertFalse(dto2.getOffererClosed());
         }
 
         @Test
@@ -142,6 +144,8 @@ public class ExchangeViewIntegrationTest {
                 assertNotNull(dto2.getPartnerContact());
                 assertEquals("Main", dto2.getPartnerFirstname()); // User 1 firstname is "Main"
                 assertEquals("alice@contact.com", dto2.getPartnerContact());
+                assertFalse(dto2.getRequesterClosed());
+                assertFalse(dto2.getOffererClosed());
         }
 
         @Test
@@ -164,5 +168,27 @@ public class ExchangeViewIntegrationTest {
                                 .orElseThrow();
                 assertEquals(CancellationReason.REQUESTER_CANCELED,
                                 dto.getCancellationReason());
+        }
+
+        @Test
+        void getSentRequests_WithClosedStatus_ShouldReturnCorrectFlags() {
+                // Create an exchange request where requester has closed
+                ExchangeRequest req = ExchangeRequest.builder()
+                                .requesterId(1L)
+                                .offererId(4L)
+                                .requestedStickerId(1L)
+                                .exchangeType(ExchangeType.PAYED)
+                                .status(ExchangeStatus.EXCHANGE_INTERREST)
+                                .requesterClosed(true)
+                                .offererClosed(false)
+                                .build();
+                exchangeRequestRepository.save(req);
+
+                List<ExchangeRequestDto> sentRequests = exchangeService.getSentRequests(1L);
+
+                ExchangeRequestDto dto = sentRequests.stream().filter(r -> r.getId().equals(req.getId())).findFirst()
+                                .orElseThrow();
+                assertTrue(dto.getRequesterClosed());
+                assertFalse(dto.getOffererClosed());
         }
 }

@@ -7,6 +7,7 @@ import com.daspawnw.sammelalbum.dto.CardOfferDtos.CardOfferResponse;
 import com.daspawnw.sammelalbum.security.CustomUserDetails;
 import com.daspawnw.sammelalbum.service.CardOfferService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class CardOfferController {
     private final CardOfferService cardOfferService;
 
     @Operation(summary = "Get all offers", description = "Retrieves all card offers for the authenticated user")
+    @ApiResponse(responseCode = "200", description = "List of card offers retrieved successfully")
     @GetMapping
     public ResponseEntity<List<CardOfferResponse>> getOffers(
             @AuthenticationPrincipal CustomUserDetails userDetails) {
@@ -33,6 +35,8 @@ public class CardOfferController {
     }
 
     @Operation(summary = "Add an offer", description = "Adds a single card offer for the authenticated user")
+    @ApiResponse(responseCode = "200", description = "Card offer added successfully")
+    @ApiResponse(responseCode = "400", description = "Invalid input")
     @PostMapping
     public ResponseEntity<CardOfferResponse> addOffer(
             @AuthenticationPrincipal CustomUserDetails userDetails,
@@ -41,6 +45,8 @@ public class CardOfferController {
     }
 
     @Operation(summary = "Add multiple offers", description = "Adds multiple card offers for the authenticated user")
+    @ApiResponse(responseCode = "200", description = "Card offers added successfully")
+    @ApiResponse(responseCode = "400", description = "Invalid input")
     @PostMapping("/bulk")
     public ResponseEntity<List<CardOfferResponse>> addBulkOffers(
             @AuthenticationPrincipal CustomUserDetails userDetails,
@@ -49,6 +55,7 @@ public class CardOfferController {
     }
 
     @Operation(summary = "Delete multiple offers", description = "Deletes multiple card offers for the authenticated user, handling duplicates intelligently")
+    @ApiResponse(responseCode = "204", description = "Card offers deleted successfully")
     @PostMapping("/bulk-delete")
     public ResponseEntity<Void> removeBulkOffers(
             @AuthenticationPrincipal CustomUserDetails userDetails,
@@ -58,6 +65,8 @@ public class CardOfferController {
     }
 
     @Operation(summary = "Update multiple offers", description = "Updates the offer type for all offers matching the given sticker IDs for the authenticated user")
+    @ApiResponse(responseCode = "200", description = "Card offers updated successfully")
+    @ApiResponse(responseCode = "400", description = "Invalid input")
     @PutMapping("/bulk")
     public ResponseEntity<List<CardOfferResponse>> updateBulkOffers(
             @AuthenticationPrincipal CustomUserDetails userDetails,
@@ -66,6 +75,8 @@ public class CardOfferController {
     }
 
     @Operation(summary = "Delete an offer", description = "Deletes a specific card offer by ID")
+    @ApiResponse(responseCode = "204", description = "Card offer deleted successfully")
+    @ApiResponse(responseCode = "404", description = "Card offer not found or not owned by user")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOffer(
             @AuthenticationPrincipal CustomUserDetails userDetails,

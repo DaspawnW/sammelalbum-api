@@ -5,10 +5,10 @@ import com.daspawnw.sammelalbum.dto.AuthDtos.LoginRequest;
 import com.daspawnw.sammelalbum.dto.AuthDtos.RegisterRequest;
 import com.daspawnw.sammelalbum.model.Credentials;
 import com.daspawnw.sammelalbum.model.User;
+import com.daspawnw.sammelalbum.config.AppProperties;
 import com.daspawnw.sammelalbum.repository.CredentialsRepository;
 import com.daspawnw.sammelalbum.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,13 +27,11 @@ public class AuthService {
         private final PasswordEncoder passwordEncoder;
         private final JwtService jwtService;
         private final AuthenticationManager authenticationManager;
-
-        @Value("${app.validation-codes}")
-        private List<String> validationCodes;
+        private final AppProperties appProperties;
 
         @Transactional
         public AuthResponse register(RegisterRequest request) {
-                if (!validationCodes.contains(request.getValidationCode())) {
+                if (!appProperties.getValidationCodes().contains(request.getValidationCode())) {
                         throw new IllegalArgumentException("Invalid validation code");
                 }
 

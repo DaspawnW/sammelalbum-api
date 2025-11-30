@@ -185,6 +185,8 @@ class ExchangeCloseIntegrationTest {
                                 .requestedStickerId(sticker1Id)
                                 .exchangeType(ExchangeType.PAYED)
                                 .status(ExchangeStatus.EXCHANGE_INTERREST)
+                                .offererCardOfferId(offererOffer.getId())
+                                .requesterCardSearchId(requesterSearch.getId())
                                 .build());
 
                 // Requester closes
@@ -229,6 +231,8 @@ class ExchangeCloseIntegrationTest {
                                 .requestedStickerId(sticker1Id)
                                 .exchangeType(ExchangeType.PAYED)
                                 .status(ExchangeStatus.EXCHANGE_INTERREST)
+                                .offererCardOfferId(offererOffer.getId())
+                                .requesterCardSearchId(requesterSearch.getId())
                                 .build());
 
                 // Offerer closes
@@ -273,6 +277,8 @@ class ExchangeCloseIntegrationTest {
                                 .requestedStickerId(sticker1Id)
                                 .exchangeType(ExchangeType.PAYED)
                                 .status(ExchangeStatus.EXCHANGE_INTERREST)
+                                .offererCardOfferId(offererOffer.getId())
+                                .requesterCardSearchId(requesterSearch.getId())
                                 .build());
 
                 // Requester closes first
@@ -323,6 +329,8 @@ class ExchangeCloseIntegrationTest {
                                 .requestedStickerId(sticker1Id)
                                 .exchangeType(ExchangeType.PAYED)
                                 .status(ExchangeStatus.EXCHANGE_INTERREST)
+                                .offererCardOfferId(offererOffer1.getId())
+                                .requesterCardSearchId(requesterSearch.getId())
                                 .build());
 
                 // Offerer closes first time
@@ -377,6 +385,10 @@ class ExchangeCloseIntegrationTest {
                                 .offeredStickerId(sticker2Id)
                                 .exchangeType(ExchangeType.EXCHANGE)
                                 .status(ExchangeStatus.EXCHANGE_INTERREST)
+                                .offererCardOfferId(offererOffer.getId())
+                                .requesterCardSearchId(requesterSearch1.getId())
+                                .requesterCardOfferId(requesterOffer.getId())
+                                .offererCardSearchId(offererSearch.getId())
                                 .build());
 
                 // Requester closes

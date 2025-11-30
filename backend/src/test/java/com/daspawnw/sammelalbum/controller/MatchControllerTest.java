@@ -93,7 +93,7 @@ class MatchControllerTest {
 
         @Test
         void getFreebieMatches_Success() throws Exception {
-                MatchResponse response = new MatchResponse(2L, 5L, Collections.emptyList());
+                MatchResponse response = new MatchResponse(2L, 5L, Collections.emptyList(), Collections.emptyList());
                 Page<MatchResponse> page = new PageImpl<>(List.of(response));
 
                 when(matchService.getFreebieMatches(eq(aliceId), any(Pageable.class))).thenReturn(page);
@@ -102,13 +102,14 @@ class MatchControllerTest {
                                 .header("Authorization", aliceToken))
                                 .andExpect(status().isOk())
                                 .andExpect(jsonPath("$.content[0].userId").value(2))
-                                .andExpect(jsonPath("$.content[0].matchCount").value(5))
-                                .andExpect(jsonPath("$.content[0].matches").isArray());
+                                .andExpect(jsonPath("$.content[0].exchangeableCount").value(5))
+                                .andExpect(jsonPath("$.content[0].itemsRequested").isArray())
+                                .andExpect(jsonPath("$.content[0].itemsOffered").isArray());
         }
 
         @Test
         void getPayedMatches_Success() throws Exception {
-                MatchResponse response = new MatchResponse(3L, 3L, Collections.emptyList());
+                MatchResponse response = new MatchResponse(3L, 3L, Collections.emptyList(), Collections.emptyList());
                 Page<MatchResponse> page = new PageImpl<>(List.of(response));
 
                 when(matchService.getPayedMatches(eq(aliceId), any(Pageable.class))).thenReturn(page);
@@ -117,13 +118,14 @@ class MatchControllerTest {
                                 .header("Authorization", aliceToken))
                                 .andExpect(status().isOk())
                                 .andExpect(jsonPath("$.content[0].userId").value(3))
-                                .andExpect(jsonPath("$.content[0].matchCount").value(3))
-                                .andExpect(jsonPath("$.content[0].matches").isArray());
+                                .andExpect(jsonPath("$.content[0].exchangeableCount").value(3))
+                                .andExpect(jsonPath("$.content[0].itemsRequested").isArray())
+                                .andExpect(jsonPath("$.content[0].itemsOffered").isArray());
         }
 
         @Test
         void getExchangeMatches_Success() throws Exception {
-                MatchResponse response = new MatchResponse(4L, 1L, Collections.emptyList());
+                MatchResponse response = new MatchResponse(4L, 1L, Collections.emptyList(), Collections.emptyList());
                 Page<MatchResponse> page = new PageImpl<>(List.of(response));
 
                 when(matchService.getExchangeMatches(eq(aliceId), any(Pageable.class))).thenReturn(page);
@@ -132,7 +134,8 @@ class MatchControllerTest {
                                 .header("Authorization", aliceToken))
                                 .andExpect(status().isOk())
                                 .andExpect(jsonPath("$.content[0].userId").value(4))
-                                .andExpect(jsonPath("$.content[0].matchCount").value(1))
-                                .andExpect(jsonPath("$.content[0].matches").isArray());
+                                .andExpect(jsonPath("$.content[0].exchangeableCount").value(1))
+                                .andExpect(jsonPath("$.content[0].itemsRequested").isArray())
+                                .andExpect(jsonPath("$.content[0].itemsOffered").isArray());
         }
 }

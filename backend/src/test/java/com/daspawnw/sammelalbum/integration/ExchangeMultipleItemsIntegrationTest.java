@@ -180,6 +180,12 @@ class ExchangeMultipleItemsIntegrationTest {
                                 .requestedStickerId(sticker1Id)
                                 .exchangeType(ExchangeType.PAYED)
                                 .status(ExchangeStatus.EXCHANGE_INTERREST)
+                                .offererCardOfferId(cardOfferRepository
+                                                .findByUserIdAndStickerIdIn(offererId, List.of(sticker1Id)).stream()
+                                                .filter(CardOffer::getIsReserved).findFirst().get().getId())
+                                .requesterCardSearchId(cardSearchRepository
+                                                .findByUserIdAndStickerIdIn(requesterId, List.of(sticker1Id)).get(0)
+                                                .getId())
                                 .build());
 
                 // Decline Request
@@ -241,6 +247,18 @@ class ExchangeMultipleItemsIntegrationTest {
                                 .offeredStickerId(sticker2Id)
                                 .exchangeType(ExchangeType.EXCHANGE)
                                 .status(ExchangeStatus.EXCHANGE_INTERREST)
+                                .offererCardOfferId(cardOfferRepository
+                                                .findByUserIdAndStickerIdIn(offererId, List.of(sticker1Id)).get(0)
+                                                .getId())
+                                .requesterCardSearchId(cardSearchRepository
+                                                .findByUserIdAndStickerIdIn(requesterId, List.of(sticker1Id)).get(0)
+                                                .getId())
+                                .requesterCardOfferId(cardOfferRepository
+                                                .findByUserIdAndStickerIdIn(requesterId, List.of(sticker2Id)).get(0)
+                                                .getId())
+                                .offererCardSearchId(cardSearchRepository
+                                                .findByUserIdAndStickerIdIn(offererId, List.of(sticker2Id)).get(0)
+                                                .getId())
                                 .build());
 
                 // Decline Request

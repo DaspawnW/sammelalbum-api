@@ -14,4 +14,13 @@ public interface ExchangeRequestRepository extends JpaRepository<ExchangeRequest
     List<ExchangeRequest> findByRequesterId(Long requesterId);
 
     List<ExchangeRequest> findByOffererId(Long offererId);
+
+    // FK-based queries for card deletion handling
+    List<ExchangeRequest> findByOffererCardOfferId(Long cardOfferId);
+
+    List<ExchangeRequest> findByRequesterCardSearchId(Long cardSearchId);
+
+    List<ExchangeRequest> findByRequesterCardOfferId(Long cardOfferId);
+
+    List<ExchangeRequest> findByOffererCardSearchId(Long cardSearchId);
 }

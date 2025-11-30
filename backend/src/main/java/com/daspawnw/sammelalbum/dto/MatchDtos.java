@@ -15,8 +15,9 @@ public class MatchDtos {
     @AllArgsConstructor
     public static class MatchResponse {
         private Long userId;
-        private Long matchCount;
-        private List<MatchStickerDto> matches;
+        private Long exchangeableCount;
+        private List<MatchStickerDto> itemsRequested;
+        private List<MatchStickerDto> itemsOffered;
     }
 
     @Data

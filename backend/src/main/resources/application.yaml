@@ -30,8 +30,12 @@ spring:
 management:
   endpoints:
     web:
+      base-path: /api/actuator
       exposure:
-        include: health,info,metrics
+        include: health
+  endpoint:
+    health:
+      show-details: never
 
 logging:
   level:
@@ -42,6 +46,7 @@ logging:
         SQL: DEBUG
 
 app:
+  # List of valid registration codes required for user sign-up
   validation-codes:
     - CODE-1111
     - CODE-2222
@@ -53,11 +58,21 @@ app:
     - CODE-8888
     - CODE-9999
     - CODE-0000
+  
+  # JWT Configuration
   jwt:
-    secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970 # This looks like hex, but let's replace with a clear Base64 for safety if decoder expects Base64
-    # Actually, let's use a generated Base64 key for 256 bits
+    # Secret key for signing JWT tokens (Base64 encoded 256-bit key)
     secret: K7gNU3kef8297wnsJvbdw/Ba49bmGW76NFh70fE0ZeM=
-    expiration: 86400000 # 1 day
+    # Token expiration time in milliseconds (86400000 ms = 24 hours)
+    expiration: 86400000
+  
+  # Mail Configuration
+  mail:
+    # Configures which EmailSender implementation to use.
+    # Options:
+    # - 'console': Logs emails to console (default, useful for dev/test)
+    # - 'smtp': Sends real emails using Spring Mail (requires valid spring.mail properties)
+    sender: console
 
 springdoc:
   api-docs:

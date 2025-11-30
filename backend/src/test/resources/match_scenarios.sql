@@ -1,4 +1,5 @@
 -- Clean up existing data
+DELETE FROM email_outbox;
 DELETE FROM exchange_requests;
 DELETE FROM card_searches;
 DELETE FROM card_offers;

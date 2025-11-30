@@ -31,6 +31,9 @@ class CardOfferServiceTest {
     @Mock
     private StickerRepository stickerRepository;
 
+    @Mock
+    private ExchangeService exchangeService;
+
     @InjectMocks
     private CardOfferService cardOfferService;
 

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -26,6 +27,7 @@ public class CardSearchController {
     private final CardSearchService cardSearchService;
 
     @Operation(summary = "Get all searches", description = "Retrieves all card searches for the authenticated user")
+    @ApiResponse(responseCode = "200", description = "List of card searches retrieved successfully")
     @GetMapping
     public ResponseEntity<List<CardSearchResponse>> getSearches(
             @AuthenticationPrincipal CustomUserDetails userDetails) {
@@ -33,6 +35,8 @@ public class CardSearchController {
     }
 
     @Operation(summary = "Add a search", description = "Adds a single card search for the authenticated user")
+    @ApiResponse(responseCode = "200", description = "Card search added successfully")
+    @ApiResponse(responseCode = "400", description = "Invalid input")
     @PostMapping
     public ResponseEntity<CardSearchResponse> addSearch(
             @AuthenticationPrincipal CustomUserDetails userDetails,
@@ -41,6 +45,8 @@ public class CardSearchController {
     }
 
     @Operation(summary = "Add multiple searches", description = "Adds multiple card searches for the authenticated user")
+    @ApiResponse(responseCode = "200", description = "Card searches added successfully")
+    @ApiResponse(responseCode = "400", description = "Invalid input")
     @PostMapping("/bulk")
     public ResponseEntity<List<CardSearchResponse>> addBulkSearches(
             @AuthenticationPrincipal CustomUserDetails userDetails,
@@ -49,6 +55,7 @@ public class CardSearchController {
     }
 
     @Operation(summary = "Delete multiple searches", description = "Deletes multiple card searches for the authenticated user, handling duplicates intelligently")
+    @ApiResponse(responseCode = "204", description = "Card searches deleted successfully")
     @PostMapping("/bulk-delete")
     public ResponseEntity<Void> removeBulkSearches(
             @AuthenticationPrincipal CustomUserDetails userDetails,
@@ -58,6 +65,8 @@ public class CardSearchController {
     }
 
     @Operation(summary = "Delete a search", description = "Deletes a specific card search by ID")
+    @ApiResponse(responseCode = "204", description = "Card search deleted successfully")
+    @ApiResponse(responseCode = "404", description = "Card search not found or not owned by user")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSearch(
             @AuthenticationPrincipal CustomUserDetails userDetails,

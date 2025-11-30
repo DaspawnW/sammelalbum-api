@@ -84,16 +84,19 @@ class MatchIntegrationTest {
                                 .andExpect(jsonPath("$.content", hasSize(2)))
                                 // First Result: User 2
                                 .andExpect(jsonPath("$.content[0].userId").value(2)) // Freebie King
-                                .andExpect(jsonPath("$.content[0].matchCount").value(5)) // 5 matches (Stickers 1-5)
-                                .andExpect(jsonPath("$.content[0].matches", hasSize(5)))
-                                .andExpect(jsonPath("$.content[0].matches[0].id").value(1))
-                                .andExpect(jsonPath("$.content[0].matches[0].name").value("Sticker 1"))
+                                .andExpect(jsonPath("$.content[0].exchangeableCount").value(5)) // 5 matches (Stickers
+                                                                                                // 1-5)
+                                .andExpect(jsonPath("$.content[0].itemsRequested", hasSize(5)))
+                                .andExpect(jsonPath("$.content[0].itemsRequested[0].id").value(1))
+                                .andExpect(jsonPath("$.content[0].itemsRequested[0].name").value("Sticker 1"))
+                                .andExpect(jsonPath("$.content[0].itemsOffered", hasSize(0)))
                                 // Second Result: User 7 (One Way) - Offers Sticker 2 as Freebie
                                 .andExpect(jsonPath("$.content[1].userId").value(7))
-                                .andExpect(jsonPath("$.content[1].matchCount").value(1))
-                                .andExpect(jsonPath("$.content[1].matches", hasSize(1)))
-                                .andExpect(jsonPath("$.content[1].matches[0].id").value(2))
-                                .andExpect(jsonPath("$.content[1].matches[0].name").value("Sticker 2"));
+                                .andExpect(jsonPath("$.content[1].exchangeableCount").value(1))
+                                .andExpect(jsonPath("$.content[1].itemsRequested", hasSize(1)))
+                                .andExpect(jsonPath("$.content[1].itemsRequested[0].id").value(2))
+                                .andExpect(jsonPath("$.content[1].itemsRequested[0].name").value("Sticker 2"))
+                                .andExpect(jsonPath("$.content[1].itemsOffered", hasSize(0)));
         }
 
         @Test
@@ -103,10 +106,14 @@ class MatchIntegrationTest {
                                 .andExpect(status().isOk())
                                 .andExpect(jsonPath("$.content", hasSize(2))) // Payed Merchant, One Way
                                 .andExpect(jsonPath("$.content[0].userId").value(3)) // Payed Merchant
-                                .andExpect(jsonPath("$.content[0].matchCount").value(5))
+                                .andExpect(jsonPath("$.content[0].exchangeableCount").value(5))
+                                .andExpect(jsonPath("$.content[0].itemsRequested", hasSize(5)))
+                                .andExpect(jsonPath("$.content[0].itemsOffered", hasSize(0)))
                                 .andExpect(jsonPath("$.content[1].userId").value(7)) // One Way - Offers Sticker 1 as
                                                                                      // Payed
-                                .andExpect(jsonPath("$.content[1].matchCount").value(1));
+                                .andExpect(jsonPath("$.content[1].exchangeableCount").value(1))
+                                .andExpect(jsonPath("$.content[1].itemsRequested", hasSize(1)))
+                                .andExpect(jsonPath("$.content[1].itemsOffered", hasSize(0)));
         }
 
         @Test
@@ -123,18 +130,24 @@ class MatchIntegrationTest {
                                 .andExpect(jsonPath("$.content", hasSize(2)))
                                 // First Result: User 4
                                 .andExpect(jsonPath("$.content[0].userId").value(4))
-                                .andExpect(jsonPath("$.content[0].matchCount").value(3))
-                                .andExpect(jsonPath("$.content[0].matches", hasSize(3)))
-                                .andExpect(jsonPath("$.content[0].matches[*].id", containsInAnyOrder(1, 2, 3)))
+                                .andExpect(jsonPath("$.content[0].exchangeableCount").value(3))
+                                .andExpect(jsonPath("$.content[0].itemsRequested", hasSize(3)))
+                                .andExpect(jsonPath("$.content[0].itemsRequested[*].id", containsInAnyOrder(1, 2, 3)))
+                                .andExpect(jsonPath("$.content[0].itemsOffered", hasSize(3)))
+                                .andExpect(jsonPath("$.content[0].itemsOffered[*].id", containsInAnyOrder(6, 7, 8)))
                                 // Second Result: User 5
                                 .andExpect(jsonPath("$.content[1].userId").value(5))
-                                .andExpect(jsonPath("$.content[1].matchCount").value(1))
-                                .andExpect(jsonPath("$.content[1].matches", hasSize(2))) // Note: Matches list contains
-                                                                                         // ALL matching
-                                                                                         // offers (1, 2), but
-                                                                                         // matchCount is 1 (exchange
-                                                                                         // potential)
-                                .andExpect(jsonPath("$.content[1].matches[*].id", containsInAnyOrder(1, 2)));
+                                .andExpect(jsonPath("$.content[1].exchangeableCount").value(1))
+                                .andExpect(jsonPath("$.content[1].itemsRequested", hasSize(2))) // Note: Matches list
+                                                                                                // contains
+                                                                                                // ALL matching
+                                                                                                // offers (1, 2), but
+                                                                                                // matchCount is 1
+                                                                                                // (exchange
+                                                                                                // potential)
+                                .andExpect(jsonPath("$.content[1].itemsRequested[*].id", containsInAnyOrder(1, 2)))
+                                .andExpect(jsonPath("$.content[1].itemsOffered", hasSize(1)))
+                                .andExpect(jsonPath("$.content[1].itemsOffered[0].id").value(6));
         }
 
         @Test
@@ -155,9 +168,11 @@ class MatchIntegrationTest {
                                 .andExpect(status().isOk())
                                 .andExpect(jsonPath("$.content", hasSize(1)))
                                 .andExpect(jsonPath("$.content[0].userId").value(1))
-                                .andExpect(jsonPath("$.content[0].matchCount").value(3))
-                                .andExpect(jsonPath("$.content[0].matches", hasSize(3)))
-                                .andExpect(jsonPath("$.content[0].matches[*].id", containsInAnyOrder(6, 7, 8)));
+                                .andExpect(jsonPath("$.content[0].exchangeableCount").value(3))
+                                .andExpect(jsonPath("$.content[0].itemsRequested", hasSize(3)))
+                                .andExpect(jsonPath("$.content[0].itemsRequested[*].id", containsInAnyOrder(6, 7, 8)))
+                                .andExpect(jsonPath("$.content[0].itemsOffered", hasSize(3)))
+                                .andExpect(jsonPath("$.content[0].itemsOffered[*].id", containsInAnyOrder(1, 2, 3)));
         }
 
         @Test
@@ -176,11 +191,10 @@ class MatchIntegrationTest {
                 mockMvc.perform(get("/api/matches/exchange")
                                 .header("Authorization", user5Token))
                                 .andExpect(status().isOk())
-                                .andExpect(jsonPath("$.content", hasSize(1)))
-                                .andExpect(jsonPath("$.content[0].userId").value(1))
-                                .andExpect(jsonPath("$.content[0].matchCount").value(1))
-                                .andExpect(jsonPath("$.content[0].matches", hasSize(1)))
-                                .andExpect(jsonPath("$.content[0].matches[0].id").value(6));
+                                .andExpect(jsonPath("$.content[0].itemsRequested", hasSize(1)))
+                                .andExpect(jsonPath("$.content[0].itemsRequested[0].id").value(6))
+                                .andExpect(jsonPath("$.content[0].itemsOffered", hasSize(2)))
+                                .andExpect(jsonPath("$.content[0].itemsOffered[*].id", containsInAnyOrder(1, 2)));
         }
 
         @Test

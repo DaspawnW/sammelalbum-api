@@ -221,6 +221,10 @@ class ExchangeDeclineIntegrationTest {
                                 .offeredStickerId(sticker2Id)
                                 .exchangeType(ExchangeType.EXCHANGE)
                                 .status(ExchangeStatus.EXCHANGE_INTERREST)
+                                .offererCardOfferId(offererOffer.getId())
+                                .requesterCardSearchId(requesterSearch.getId())
+                                .requesterCardOfferId(requesterOffer.getId())
+                                .offererCardSearchId(offererSearch.getId())
                                 .build());
 
                 mockMvc.perform(put("/api/exchanges/" + request.getId() + "/decline")
@@ -259,6 +263,8 @@ class ExchangeDeclineIntegrationTest {
                                 .requestedStickerId(sticker1Id)
                                 .exchangeType(ExchangeType.PAYED)
                                 .status(ExchangeStatus.EXCHANGE_INTERREST)
+                                .offererCardOfferId(offererOffer.getId())
+                                .requesterCardSearchId(requesterSearch.getId())
                                 .build());
 
                 mockMvc.perform(put("/api/exchanges/" + request.getId() + "/decline")
