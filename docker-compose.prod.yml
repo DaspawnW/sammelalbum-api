@@ -12,7 +12,7 @@ services:
       - internal
 
   backend:
-    image: ghcr.io/daspawnw/sammelalbum/backend:latest
+    image: ghcr.io/daspawnw/sammelalbum-api/backend:main
     restart: always
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB}
@@ -27,7 +27,7 @@ services:
       - web
 
   frontend:
-    image: ghcr.io/daspawnw/sammelalbum/frontend:latest
+    image: ghcr.io/daspawnw/sammelalbum-api/frontend:main
     restart: always
     networks:
       - web
@@ -45,6 +45,7 @@ services:
     volumes:
       - caddy_data:/data
       - caddy_config:/config
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
     depends_on:
       - backend
       - frontend

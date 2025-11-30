@@ -18,11 +18,18 @@ export function customLoaderFactory(http: HttpClient) {
 import { routes } from './app.routes';
 import { authInterceptor } from './interceptors/auth-interceptor';
 
+import { ApiConfiguration } from './api/api-configuration';
+import { environment } from '../environments/environment';
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor])),
+    {
+      provide: ApiConfiguration,
+      useValue: { rootUrl: environment.apiUrl }
+    },
     importProvidersFrom(
       TranslateModule.forRoot({
         loader: {
