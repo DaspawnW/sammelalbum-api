@@ -66,6 +66,10 @@ app:
     # Token expiration time in milliseconds (86400000 ms = 24 hours)
     expiration: 86400000
   
+  # CORS Configuration
+  cors:
+    allowed-origins: http://localhost:4200
+  
   # Mail Configuration
   mail:
     # Configures which EmailSender implementation to use.
