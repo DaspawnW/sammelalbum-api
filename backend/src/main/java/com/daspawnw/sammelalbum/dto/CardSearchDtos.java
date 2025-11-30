@@ -32,6 +32,7 @@ public class CardSearchDtos {
     public static class CardSearchResponse {
         private Long id;
         private Long stickerId;
+        private String stickerName;
         private Boolean isReserved;
     }
 }

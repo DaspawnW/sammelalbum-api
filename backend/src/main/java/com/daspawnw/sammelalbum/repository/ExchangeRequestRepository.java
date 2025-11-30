@@ -23,4 +23,10 @@ public interface ExchangeRequestRepository extends JpaRepository<ExchangeRequest
     List<ExchangeRequest> findByRequesterCardOfferId(Long cardOfferId);
 
     List<ExchangeRequest> findByOffererCardSearchId(Long cardSearchId);
+
+    boolean existsByRequesterIdAndOffererIdAndRequestedStickerIdAndOfferedStickerIdAndExchangeTypeAndStatusIn(
+            Long requesterId, Long offererId, Long requestedStickerId, Long offeredStickerId,
+            com.daspawnw.sammelalbum.model.ExchangeType exchangeType, List<ExchangeStatus> statuses);
+
+    List<ExchangeRequest> findByRequesterIdAndOffererIdIn(Long requesterId, List<Long> offererIds);
 }

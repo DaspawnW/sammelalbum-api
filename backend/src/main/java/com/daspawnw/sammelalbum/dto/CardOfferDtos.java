@@ -49,6 +49,7 @@ public class CardOfferDtos {
     public static class CardOfferResponse {
         private Long id;
         private Long stickerId;
+        private String stickerName;
         private Boolean offerPayed;
         private Boolean offerFreebie;
         private Boolean offerExchange;

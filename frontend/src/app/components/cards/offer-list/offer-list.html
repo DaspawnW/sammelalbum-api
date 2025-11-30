@@ -1,0 +1,228 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="md:flex md:items-center md:justify-between mb-6">
+        <div class="flex-1 min-w-0">
+            <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+                {{ 'OFFERS.TITLE' | translate }}
+            </h2>
+        </div>
+        <div class="mt-4 flex md:mt-0 md:ml-4 gap-10">
+            <!-- Delete selected button (shown when items are selected) -->
+            <button *ngIf="hasSelectedOffers" type="button" (click)="openDeleteModal()"
+                style="height: 2.5rem; display: inline-flex; align-items: center; padding: 0 1rem; border: 1px solid #DC2626; border-radius: 0.375rem; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); font-size: 0.875rem; font-weight: 500; color: #DC2626; background: white; cursor: pointer;"
+                onmouseover="this.style.background='#FEF2F2'" onmouseout="this.style.background='white'">
+                {{ 'OFFERS.DELETE_SELECTED' | translate }} ({{ selectedOfferIds.size }})
+            </button>
+
+            <button type="button" (click)="openCreateModal()"
+                style="margin-left: 2.5rem; height: 2.5rem; display: inline-flex; align-items: center; padding: 0 1rem; border: 1px solid transparent; border-radius: 0.375rem; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); font-size: 0.875rem; font-weight: 500; color: white; background: oklch(58.7% 0.181 145.4); cursor: pointer;"
+                onmouseover="this.style.background='oklch(55% 0.181 145.4)'"
+                onmouseout="this.style.background='oklch(58.7% 0.181 145.4)'">
+                {{ 'OFFERS.CREATE' | translate }}
+            </button>
+        </div>
+    </div>
+
+    <div class="flex flex-col">
+        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left">
+                                    <input type="checkbox" [checked]="isAllSelected()" (change)="toggleSelectAll()"
+                                        style="cursor: pointer;">
+                                </th>
+                                <th scope="col" (click)="sortBy('stickerId')"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none">
+                                    {{ 'OFFERS.TABLE.CARD_ID' | translate }} <span class="ml-1">{{
+                                        getSortIcon('stickerId') }}</span>
+                                </th>
+                                <th scope="col" (click)="sortBy('stickerName')"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none">
+                                    {{ 'OFFERS.TABLE.CARD_NAME' | translate }} <span class="ml-1">{{
+                                        getSortIcon('stickerName') }}</span>
+                                </th>
+                                <th scope="col" (click)="sortBy('type')"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none">
+                                    {{ 'OFFERS.TABLE.TYPE' | translate }} <span class="ml-1">{{ getSortIcon('type')
+                                        }}</span>
+                                </th>
+                                <th scope="col" class="relative px-6 py-3">
+                                    <span class="sr-only">{{ 'OFFERS.TABLE.ACTIONS' | translate }}</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr *ngFor="let offer of offers">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <input type="checkbox" [checked]="isOfferSelected(offer.id!)"
+                                        (change)="toggleOfferSelection(offer.id!)" style="cursor: pointer;">
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    {{ offer.stickerId }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {{ offer.stickerName || '-' }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <span *ngIf="offer.offerPayed"
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                        {{ 'OFFERS.TABLE.TYPES.PAYED' | translate }}
+                                    </span>
+                                    <span *ngIf="offer.offerExchange"
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                        {{ 'OFFERS.TABLE.TYPES.EXCHANGE' | translate }}
+                                    </span>
+                                    <span *ngIf="offer.offerFreebie"
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
+                                        {{ 'OFFERS.TABLE.TYPES.FREEBIE' | translate }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <a href="#" (click)="$event.preventDefault(); openDeleteModalForOffer(offer.id!)"
+                                        class="text-psv-green hover:text-psv-green">{{ 'OFFERS.TABLE.DELETE' |
+                                        translate }}</a>
+                                </td>
+                            </tr>
+                            <tr *ngIf="offers.length === 0 && !loading">
+                                <td colspan="5" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                                    {{ 'OFFERS.EMPTY' | translate }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Create Offer Modal -->
+    <div *ngIf="showCreateModal"
+        style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 1rem;">
+        <!-- Background overlay -->
+        <div (click)="closeCreateModal()"
+            style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5);">
+        </div>
+
+        <!-- Modal panel -->
+        <div
+            style="position: relative; background: white; border-radius: 0.5rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); max-width: 32rem; width: 100%; max-height: 90vh; overflow-y: auto;">
+            <div style="padding: 1.5rem;">
+                <h3 style="font-size: 1.125rem; font-weight: 600; color: #111827; margin-bottom: 1rem;">
+                    {{ 'OFFERS.CREATE_MODAL.TITLE' | translate }}
+                </h3>
+
+                <!-- Error message -->
+                <div *ngIf="createError"
+                    style="margin-bottom: 1rem; background-color: #FEF2F2; border: 1px solid #FCA5A5; color: #991B1B; padding: 0.75rem; border-radius: 0.375rem;">
+                    {{ createError | translate }}
+                </div>
+
+                <!-- Sticker IDs textarea -->
+                <div style="margin-bottom: 1rem;">
+                    <label
+                        style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.5rem;">
+                        {{ 'OFFERS.CREATE_MODAL.STICKER_IDS' | translate }}
+                    </label>
+                    <textarea [(ngModel)]="stickerIdsInput" rows="6"
+                        [placeholder]="'OFFERS.CREATE_MODAL.STICKER_IDS_PLACEHOLDER' | translate"
+                        style="width: 100%; padding: 0.5rem; border: 1px solid #D1D5DB; border-radius: 0.375rem; font-size: 0.875rem;"></textarea>
+                    <p style="margin-top: 0.25rem; font-size: 0.875rem; color: #6B7280;">{{
+                        'OFFERS.CREATE_MODAL.STICKER_IDS_HINT' | translate }}</p>
+                </div>
+
+                <!-- Offer types checkboxes -->
+                <div style="margin-bottom: 1rem;">
+                    <label
+                        style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.5rem;">
+                        {{ 'OFFERS.CREATE_MODAL.OFFER_TYPES' | translate }}
+                    </label>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <label style="display: flex; align-items: center;">
+                            <input type="checkbox" [(ngModel)]="offerExchange" style="margin-right: 0.5rem;">
+                            <span style="font-size: 0.875rem; color: #374151;">{{ 'OFFERS.TABLE.TYPES.EXCHANGE' |
+                                translate }}</span>
+                        </label>
+                        <label style="display: flex; align-items: center;">
+                            <input type="checkbox" [(ngModel)]="offerFreebie" style="margin-right: 0.5rem;">
+                            <span style="font-size: 0.875rem; color: #374151;">{{ 'OFFERS.TABLE.TYPES.FREEBIE' |
+                                translate }}</span>
+                        </label>
+                        <label style="display: flex; align-items: center;">
+                            <input type="checkbox" [(ngModel)]="offerPayed" style="margin-right: 0.5rem;">
+                            <span style="font-size: 0.875rem; color: #374151;">{{ 'OFFERS.TABLE.TYPES.PAYED' | translate
+                                }}</span>
+                        </label>
+                    </div>
+                    <!-- Fair trade warning -->
+                    <div *ngIf="offerPayed"
+                        style="margin-top: 0.75rem; background-color: #EFF6FF; border: 1px solid #BFDBFE; color: #1E40AF; padding: 0.75rem; border-radius: 0.375rem;">
+                        <p style="font-size: 0.875rem;">{{ 'OFFERS.CREATE_MODAL.FAIR_TRADE_WARNING' | translate }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal footer -->
+            <div
+                style="background-color: #F9FAFB; padding: 0.75rem 1.5rem; display: flex; justify-content: flex-end; gap: 0.75rem;">
+                <button type="button" (click)="closeCreateModal()" [disabled]="creating"
+                    style="padding: 0.5rem 1rem; border: 1px solid #D1D5DB; border-radius: 0.375rem; background: white; color: #374151; font-size: 0.875rem; cursor: pointer;">
+                    {{ 'OFFERS.CREATE_MODAL.CANCEL' | translate }}
+                </button>
+                <button type="button" (click)="createOffers()" [disabled]="creating"
+                    style="padding: 0.5rem 1rem; border: none; border-radius: 0.375rem; background: oklch(58.7% 0.181 145.4); color: white; font-size: 0.875rem; cursor: pointer;"
+                    [style.opacity]="creating ? '0.5' : '1'" [style.cursor]="creating ? 'not-allowed' : 'pointer'">
+                    <span *ngIf="!creating">{{ 'OFFERS.CREATE_MODAL.SUBMIT' | translate }}</span>
+                    <span *ngIf="creating">{{ 'OFFERS.CREATE_MODAL.CREATING' | translate }}</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div *ngIf="showDeleteModal"
+        style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 1rem;">
+        <!-- Background overlay -->
+        <div (click)="closeDeleteModal()"
+            style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5);">
+        </div>
+
+        <!-- Modal panel -->
+        <div
+            style="position: relative; background: white; border-radius: 0.5rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); max-width: 28rem; width: 100%;">
+            <div style="padding: 1.5rem;">
+                <h3 style="font-size: 1.125rem; font-weight: 600; color: #111827; margin-bottom: 1rem;">
+                    {{ 'OFFERS.DELETE_MODAL.TITLE' | translate }}
+                </h3>
+
+                <!-- Error message -->
+                <div *ngIf="deleteError"
+                    style="margin-bottom: 1rem; background-color: #FEF2F2; border: 1px solid #FCA5A5; color: #991B1B; padding: 0.75rem; border-radius: 0.375rem;">
+                    {{ deleteError | translate }}
+                </div>
+
+                <!-- Confirmation message -->
+                <p style="font-size: 0.875rem; color: #6B7280; margin-bottom: 1rem;">
+                    {{ 'OFFERS.DELETE_MODAL.CONFIRM' | translate: {count: selectedOfferIds.size} }}
+                </p>
+            </div>
+
+            <!-- Modal footer -->
+            <div
+                style="background-color: #F9FAFB; padding: 0.75rem 1.5rem; display: flex; justify-content: flex-end; gap: 0.75rem;">
+                <button type="button" (click)="closeDeleteModal()" [disabled]="deleting"
+                    style="padding: 0.5rem 1rem; border: 1px solid #D1D5DB; border-radius: 0.375rem; background: white; color: #374151; font-size: 0.875rem; cursor: pointer;">
+                    {{ 'OFFERS.DELETE_MODAL.CANCEL' | translate }}
+                </button>
+                <button type="button" (click)="deleteSelectedOffers()" [disabled]="deleting"
+                    style="padding: 0.5rem 1rem; border: none; border-radius: 0.375rem; background: #DC2626; color: white; font-size: 0.875rem; cursor: pointer;"
+                    [style.opacity]="deleting ? '0.5' : '1'" [style.cursor]="deleting ? 'not-allowed' : 'pointer'">
+                    <span *ngIf="!deleting">{{ 'OFFERS.DELETE_MODAL.DELETE' | translate }}</span>
+                    <span *ngIf="deleting">{{ 'OFFERS.DELETE_MODAL.DELETING' | translate }}</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

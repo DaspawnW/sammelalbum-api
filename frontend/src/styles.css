@@ -1,0 +1,31 @@
+@import "tailwindcss";
+@source ".";
+
+@theme {
+    --color-psv-green: oklch(58.7% 0.181 145.4);
+}
+
+/* PSV Green utility classes */
+.border-psv-green {
+    border-color: oklch(58.7% 0.181 145.4);
+}
+
+.text-psv-green {
+    color: oklch(58.7% 0.181 145.4);
+}
+
+.bg-psv-green-50 {
+    background-color: oklch(95% 0.03 145.4);
+}
+
+.bg-psv-green {
+    background-color: oklch(58.7% 0.181 145.4);
+}
+
+.hover\:bg-psv-green-700:hover {
+    background-color: oklch(55% 0.181 145.4);
+}
+
+.focus\:ring-psv-green:focus {
+    --tw-ring-color: oklch(58.7% 0.181 145.4);
+}

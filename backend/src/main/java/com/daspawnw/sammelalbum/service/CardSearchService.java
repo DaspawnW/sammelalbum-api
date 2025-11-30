@@ -42,7 +42,10 @@ public class CardSearchService {
                 .userId(userId)
                 .stickerId(request.getStickerId())
                 .build();
-        return mapToResponse(cardSearchRepository.save(cardSearch));
+        CardSearch saved = cardSearchRepository.save(cardSearch);
+        // Load sticker for response
+        saved.setSticker(stickerRepository.findById(saved.getStickerId()).orElse(null));
+        return mapToResponse(saved);
     }
 
     @Transactional
@@ -54,7 +57,13 @@ public class CardSearchService {
                         .stickerId(stickerId)
                         .build())
                 .collect(Collectors.toList());
-        return cardSearchRepository.saveAll(searches).stream()
+        List<CardSearch> saved = cardSearchRepository.saveAll(searches);
+        // Load all stickers in one query to avoid N+1
+        List<Long> stickerIds = saved.stream().map(CardSearch::getStickerId).distinct().collect(Collectors.toList());
+        var stickerMap = stickerRepository.findAllById(stickerIds).stream()
+                .collect(Collectors.toMap(com.daspawnw.sammelalbum.model.Sticker::getId, s -> s));
+        saved.forEach(search -> search.setSticker(stickerMap.get(search.getStickerId())));
+        return saved.stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }
@@ -114,6 +123,7 @@ public class CardSearchService {
         return CardSearchResponse.builder()
                 .id(cardSearch.getId())
                 .stickerId(cardSearch.getStickerId())
+                .stickerName(cardSearch.getSticker() != null ? cardSearch.getSticker().getName() : null)
                 .isReserved(cardSearch.getIsReserved())
                 .build();
     }

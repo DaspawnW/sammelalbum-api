@@ -130,7 +130,8 @@ public class CardSearchControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(request)))
                                 .andExpect(status().isOk())
-                                .andExpect(jsonPath("$.stickerId").value(1));
+                                .andExpect(jsonPath("$.stickerId").value(1))
+                                .andExpect(jsonPath("$.stickerName").value("Sticker 1"));
 
                 assertEquals(1, cardSearchRepository.findAllByUserId(aliceId).size());
         }
@@ -144,7 +145,9 @@ public class CardSearchControllerTest {
                 mockMvc.perform(get("/api/card-searches")
                                 .header("Authorization", aliceToken))
                                 .andExpect(status().isOk())
-                                .andExpect(jsonPath("$", hasSize(2)));
+                                .andExpect(jsonPath("$", hasSize(2)))
+                                .andExpect(jsonPath("$[0].stickerName").value("Sticker 1"))
+                                .andExpect(jsonPath("$[1].stickerName").value("Sticker 2"));
         }
 
         @Test

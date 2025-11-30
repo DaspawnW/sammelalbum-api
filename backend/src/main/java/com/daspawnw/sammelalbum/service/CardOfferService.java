@@ -49,7 +49,10 @@ public class CardOfferService {
                 .offerFreebie(request.getOfferFreebie() != null ? request.getOfferFreebie() : false)
                 .offerExchange(request.getOfferExchange() != null ? request.getOfferExchange() : false)
                 .build();
-        return mapToResponse(cardOfferRepository.save(cardOffer));
+        CardOffer saved = cardOfferRepository.save(cardOffer);
+        // Load sticker for response
+        saved.setSticker(stickerRepository.findById(saved.getStickerId()).orElse(null));
+        return mapToResponse(saved);
     }
 
     @Transactional
@@ -64,7 +67,13 @@ public class CardOfferService {
                         .offerExchange(request.getOfferExchange() != null ? request.getOfferExchange() : false)
                         .build())
                 .collect(Collectors.toList());
-        return cardOfferRepository.saveAll(offers).stream()
+        List<CardOffer> saved = cardOfferRepository.saveAll(offers);
+        // Load all stickers in one query to avoid N+1
+        List<Long> stickerIds = saved.stream().map(CardOffer::getStickerId).distinct().collect(Collectors.toList());
+        var stickerMap = stickerRepository.findAllById(stickerIds).stream()
+                .collect(Collectors.toMap(com.daspawnw.sammelalbum.model.Sticker::getId, s -> s));
+        saved.forEach(offer -> offer.setSticker(stickerMap.get(offer.getStickerId())));
+        return saved.stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }
@@ -146,6 +155,7 @@ public class CardOfferService {
         return CardOfferResponse.builder()
                 .id(cardOffer.getId())
                 .stickerId(cardOffer.getStickerId())
+                .stickerName(cardOffer.getSticker() != null ? cardOffer.getSticker().getName() : null)
                 .offerPayed(cardOffer.getOfferPayed())
                 .offerFreebie(cardOffer.getOfferFreebie())
                 .offerExchange(cardOffer.getOfferExchange())

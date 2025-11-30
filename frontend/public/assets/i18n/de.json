@@ -1,0 +1,244 @@
+{
+    "FOOTER": {
+        "IMPRINT": "Impressum",
+        "PRIVACY": "Datenschutz"
+    },
+    "LANDING": {
+        "TITLE": "Willkommen beim Sammelalbum",
+        "SUBTITLE": "Das Tauschportal für unseren Verein",
+        "DESCRIPTION": "Dieses Portal ist ein Projekt, um den Tausch von Stickern für den Verein zu erleichtern. Sobald das Interesse nachlässt, werde ich die Webseite wieder schließen und alle Daten werden gelöscht.",
+        "PRIVACY_HINT": "Weitere Details zur Datennutzung finden Sie in der",
+        "PRIVACY_LINK": "Datenschutzerklärung",
+        "LOGIN": "Anmelden",
+        "REGISTER": "Registrieren",
+        "FEATURES": {
+            "MANAGE_TITLE": "Sammlung verwalten",
+            "MANAGE_DESC": "Behalte den vollen Überblick über deine Sticker-Sammlung. Markiere ganz einfach, welche Sticker du bereits besitzt und welche dir noch fehlen, um dein Album zu vervollständigen. Die intuitive Benutzeroberfläche macht das Verwalten deiner doppelten Sticker zum Kinderspiel. So weißt du immer genau, was du zum Tauschen anbieten kannst.",
+            "MATCHES_TITLE": "Tauschpartner finden",
+            "MATCHES_DESC": "Unser intelligenter Algorithmus findet automatisch die perfekten Tauschpartner für dich. Er vergleicht deine fehlenden Sticker mit den doppelten Stickern anderer Nutzer und zeigt dir sofort passende Treffer an. Du musst nicht mehr mühsam Listen durchsuchen oder Nachrichten schreiben, um jemanden zu finden. Spare Zeit und konzentriere dich darauf, deine Sammlung zu komplettieren.",
+            "EXCHANGES_TITLE": "Tausche organisieren",
+            "EXCHANGES_DESC": "Organisiere deine Tauschgeschäfte direkt über das Portal. Schlage einen Tausch vor, verhandle Details und verfolge den Status, bis die Sticker sicher bei dir angekommen sind. Das System hilft dir, den Überblick über offene, akzeptierte und abgeschlossene Tausche zu behalten. So wird das Tauschen sicher, transparent und effizient für alle Beteiligten."
+        }
+    },
+    "APP": {
+        "TITLE": "Sammelalbum"
+    },
+    "NAV": {
+        "DASHBOARD": "Übersicht",
+        "OFFERS": "Meine Angebote",
+        "SEARCHES": "Meine Suchanfragen",
+        "MATCHES": "Matches",
+        "EXCHANGES": "Tauschanfragen",
+        "LOGOUT": "Abmelden"
+    },
+    "COMMON": {
+        "CANCEL": "Abbrechen",
+        "REMOVE": "Entfernen"
+    },
+    "AUTH": {
+        "LOGIN": {
+            "TITLE": "Anmelden",
+            "USERNAME": "Benutzername",
+            "PASSWORD": "Passwort",
+            "SUBMIT": "Anmelden",
+            "REGISTER_LINK": "Noch kein Konto? Registrieren",
+            "ERROR": "Ungültiger Benutzername oder Passwort"
+        },
+        "REGISTER": {
+            "TITLE": "Konto erstellen",
+            "SUBTITLE": "Erstellen Sie Ihr neues Konto",
+            "USERNAME": "Benutzername",
+            "PASSWORD": "Passwort",
+            "EMAIL": "E-Mail Adresse",
+            "FIRSTNAME": "Vorname",
+            "LASTNAME": "Nachname",
+            "CONTACT": "Kontakt (Optional)",
+            "VALIDATION_CODE": "Validierungscode",
+            "SUBMIT": "Registrieren",
+            "LOGIN_LINK": "Bereits ein Konto? Anmelden",
+            "ERROR": "Registrierung fehlgeschlagen. Bitte überprüfen Sie Ihre Eingaben und den Validierungscode."
+        }
+    },
+    "DASHBOARD": {
+        "WELCOME": "Willkommen zurück, {{firstname}} {{lastname}}!",
+        "OFFERS": {
+            "TITLE": "Meine Angebote",
+            "DESC": "Verwalten Sie Ihre Kartenangebote",
+            "ACTION": "Angebote ansehen"
+        },
+        "SEARCHES": {
+            "TITLE": "Meine Suchanfragen",
+            "DESC": "Verwalten Sie Ihre Suchanfragen",
+            "ACTION": "Suchanfragen ansehen"
+        },
+        "MATCHES": {
+            "TITLE": "Matches",
+            "DESC": "Sehen Sie, wer hat, was Sie brauchen",
+            "ACTION": "Matches ansehen"
+        },
+        "EXCHANGES": {
+            "TITLE": "Tauschanfragen",
+            "DESC": "Verfolgen Sie Ihre Tauschanfragen",
+            "ACTION": "Tauschanfragen ansehen"
+        }
+    },
+    "OFFERS": {
+        "TITLE": "Meine Angebote",
+        "CREATE": "Angebot erstellen",
+        "DELETE_SELECTED": "Ausgewählte löschen",
+        "CREATE_MODAL": {
+            "TITLE": "Neue Angebote erstellen",
+            "STICKER_IDS": "Sticker-IDs",
+            "STICKER_IDS_PLACEHOLDER": "1\n2\n3\n...",
+            "STICKER_IDS_HINT": "Geben Sie eine Sticker-ID pro Zeile ein",
+            "OFFER_TYPES": "Angebotstypen",
+            "FAIR_TRADE_WARNING": "Der Verkauf sollte gerecht zugehen und dem Wert der Karte im Einkauf entsprechen!",
+            "ERROR_NO_TYPE": "Bitte wählen Sie mindestens einen Angebotstyp aus",
+            "ERROR_NO_IDS": "Bitte geben Sie mindestens eine gültige Sticker-ID ein",
+            "ERROR_GENERAL": "Fehler beim Erstellen der Angebote. Bitte versuchen Sie es erneut.",
+            "SUBMIT": "Erstellen",
+            "CREATING": "Erstelle...",
+            "CANCEL": "Abbrechen"
+        },
+        "DELETE_MODAL": {
+            "TITLE": "Angebote löschen",
+            "CONFIRM": "Möchten Sie wirklich {{count}} Angebot(e) löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+            "ERROR_GENERAL": "Fehler beim Löschen der Angebote. Bitte versuchen Sie es erneut.",
+            "DELETE": "Löschen",
+            "DELETING": "Lösche...",
+            "CANCEL": "Abbrechen"
+        },
+        "TABLE": {
+            "CARD_ID": "Sticker-ID",
+            "CARD_NAME": "Sticker-Name",
+            "TYPE": "Typ",
+            "ACTIONS": "Aktionen",
+            "DELETE": "Löschen",
+            "TYPES": {
+                "PAYED": "Verkauf",
+                "EXCHANGE": "Tausch",
+                "FREEBIE": "Geschenk"
+            }
+        },
+        "EMPTY": "Keine Angebote gefunden."
+    },
+    "SEARCHES": {
+        "TITLE": "Meine Suchanfragen",
+        "CREATE": "Suchanfrage erstellen",
+        "DELETE_SELECTED": "Ausgewählte löschen",
+        "CREATE_MODAL": {
+            "TITLE": "Neue Suchanfragen erstellen",
+            "STICKER_IDS": "Sticker-IDs",
+            "STICKER_IDS_PLACEHOLDER": "1\n2\n3\n...",
+            "STICKER_IDS_HINT": "Geben Sie eine Sticker-ID pro Zeile ein",
+            "ERROR_NO_IDS": "Bitte geben Sie mindestens eine gültige Sticker-ID ein",
+            "ERROR_GENERAL": "Fehler beim Erstellen der Suchanfragen. Bitte versuchen Sie es erneut.",
+            "SUBMIT": "Erstellen",
+            "CREATING": "Erstelle...",
+            "CANCEL": "Abbrechen"
+        },
+        "DELETE_MODAL": {
+            "TITLE": "Suchanfragen löschen",
+            "CONFIRM": "Möchten Sie wirklich {{count}} Suchanfrage(n) löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+            "ERROR_GENERAL": "Fehler beim Löschen der Suchanfragen. Bitte versuchen Sie es erneut.",
+            "DELETE": "Löschen",
+            "DELETING": "Lösche...",
+            "CANCEL": "Abbrechen"
+        },
+        "TABLE": {
+            "CARD_ID": "Sticker-ID",
+            "CARD_NAME": "Sticker-Name",
+            "STATUS": "Status",
+            "ACTIONS": "Aktionen",
+            "DELETE": "Löschen",
+            "RESERVED": "Reserviert",
+            "AVAILABLE": "Verfügbar",
+            "OPEN": "Offen"
+        },
+        "EMPTY": "Keine Suchanfragen gefunden."
+    },
+    "MATCHES": {
+        "TITLE": "Mögliche Tauschanfragen",
+        "PRIVACY_HINT": "Hinweis: Der Name und die Kontaktdaten der Person werden sichtbar, sobald diese Interesse an einer möglichen Transaktion bestätigt hat.",
+        "FAIRNESS_HINT": "Hinweis: Jeder Anbieter ist dazu angehalten, dass der Verkauf gerecht zugeht und dem Wert der Karte im Einkauf entspricht!",
+        "TABS": {
+            "EXCHANGE": "Tausch",
+            "FREEBIE": "Geschenk",
+            "PAYED": "Kauf"
+        },
+        "TABLE": {
+            "USER_ID": "Benutzer-ID",
+            "OFFERED": "Angebotene Artikel",
+            "REQUESTED": "Gesuchte Artikel",
+            "ACTIONS": "Aktionen",
+            "VIEW": "Tauschanfrage anlegen"
+        },
+        "EMPTY": "Keine Matches gefunden."
+    },
+    "EXCHANGE_MODAL": {
+        "TITLE": "Tauschanfrage erstellen",
+        "EXCHANGE_DESC": "Wähle Artikel zum Geben und Erhalten aus. Du kannst mehrere Paare hinzufügen.",
+        "GIFT_DESC": "Wähle die Sticker aus, die du von der anderen Person erhalten möchtest.",
+        "GIVE": "Geben",
+        "GET": "Erhalten",
+        "SELECT_ITEM": "Artikel wählen",
+        "ADDED_PAIRS": "Hinzugefügte Paare",
+        "SELECTED": "Artikel ausgewählt",
+        "CREATE_REQUEST": "Anfrage erstellen",
+        "DETAILS_TITLE": "Tauschdetails",
+        "PARTNER_CONTACT": "Partner Kontakt",
+        "CLOSED_BY_ME": "Von dir geschlossen",
+        "CLOSED_BY_PARTNER": "Vom Partner geschlossen",
+        "ACTIONS": {
+            "ACCEPT": "Tausch abstimmen",
+            "DECLINE": "Tausch ablehnen",
+            "CLOSE": "Transaktion abschließen",
+            "CONFIRM_CLOSE": "Abschließen bestätigen"
+        },
+        "CLOSE_WARNING_TITLE": "Transaktion abschließen?",
+        "CLOSE_WARNING_DESC": "Dies schließt den Tausch ab und entfernt die Karten aus deinen Listen. Diese Aktion kann nicht rückgängig gemacht werden."
+    },
+    "EXCHANGES": {
+        "TITLE": "Tauschanfragen",
+        "RECEIVED": "Erhaltene Angebote",
+        "SENT": "Gesendete Anfragen",
+        "CONTACT_INFO_WARNING": "Hinweis: Der Name und die Kontaktdaten der Person werden sichtbar, sobald diese Interesse an einer möglichen Transaktion bestätigt hat.",
+        "FILTER_STATUS": "Status filtern",
+        "TABLE": {
+            "ID": "ID",
+            "TYPE": "Typ",
+            "STATUS": "Status",
+            "PARTNER": "Partner",
+            "PARTNER_ID": "Partner-ID",
+            "REQUESTED": "Angefragt",
+            "OFFERED": "Angeboten",
+            "ACTIONS": "Aktionen",
+            "VIEW": "Ansehen",
+            "TYPES": {
+                "EXCHANGE": "Tausch",
+                "PAYED": "Kauf",
+                "FREEBIE": "Geschenk"
+            },
+            "STATUSES": {
+                "INITIAL": "Offen",
+                "MAIL_SEND": "Mail gesendet",
+                "EXCHANGE_INTERREST": "Interesse",
+                "EXCHANGE_COMPLETED": "Abgeschlossen",
+                "EXCHANGE_CANCELED": "Abgebrochen",
+                "STATUS_RECEIVED": "Bereits erhalten",
+                "STATUS_GIVEN": "Bereits abgegeben"
+            }
+        },
+        "EMPTY_RECEIVED": "Keine erhaltenen Angebote gefunden.",
+        "EMPTY_SENT": "Keine gesendeten Anfragen gefunden."
+    },
+    "PAGINATION": {
+        "PREVIOUS": "Zurück",
+        "NEXT": "Weiter",
+        "PAGE": "Seite",
+        "OF": "von",
+        "SHOWING": "Zeige",
+        "TO": "bis",
+        "RESULTS": "Ergebnisse"
+    }
+}

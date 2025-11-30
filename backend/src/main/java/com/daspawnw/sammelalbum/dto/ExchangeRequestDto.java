@@ -24,6 +24,9 @@ public class ExchangeRequestDto {
     private Boolean requesterClosed;
     private Boolean offererClosed;
 
+    private String requestedStickerName;
+    private String offeredStickerName;
+
     // Conditional fields
     private String partnerFirstname;
     private String partnerLastname;

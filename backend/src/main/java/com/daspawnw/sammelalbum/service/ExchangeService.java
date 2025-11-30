@@ -42,6 +42,16 @@ public class ExchangeService {
             throw new IllegalArgumentException("Cannot create exchange request with yourself");
         }
 
+        // Check for existing active requests
+        boolean exists = exchangeRequestRepository
+                .existsByRequesterIdAndOffererIdAndRequestedStickerIdAndOfferedStickerIdAndExchangeTypeAndStatusIn(
+                        requesterId, offererId, requestedStickerId, offeredStickerId, type,
+                        List.of(ExchangeStatus.INITIAL, ExchangeStatus.MAIL_SEND, ExchangeStatus.EXCHANGE_INTERREST));
+
+        if (exists) {
+            throw new IllegalArgumentException("An active exchange request already exists for this selection");
+        }
+
         switch (type) {
             case EXCHANGE:
                 validateExchange(requesterId, offererId, requestedStickerId, offeredStickerId);
@@ -395,19 +405,41 @@ public class ExchangeService {
     public List<ExchangeRequestDto> getSentRequests(Long requesterId) {
         List<ExchangeRequest> requests = exchangeRequestRepository.findByRequesterId(requesterId);
         Map<Long, User> partners = fetchPartners(requests, ExchangeRequest::getOffererId);
+        Map<Long, String> stickerNames = fetchStickerNames(requests);
 
         return requests.stream()
-                .map(request -> mapToDto(request, partners.get(request.getOffererId())))
+                .map(request -> mapToDto(request, partners.get(request.getOffererId()), stickerNames))
                 .collect(Collectors.toList());
     }
 
     public List<ExchangeRequestDto> getReceivedOffers(Long offererId) {
         List<ExchangeRequest> requests = exchangeRequestRepository.findByOffererId(offererId);
         Map<Long, User> partners = fetchPartners(requests, ExchangeRequest::getRequesterId);
+        Map<Long, String> stickerNames = fetchStickerNames(requests);
 
         return requests.stream()
-                .map(request -> mapToDto(request, partners.get(request.getRequesterId())))
+                .map(request -> mapToDto(request, partners.get(request.getRequesterId()), stickerNames))
                 .collect(Collectors.toList());
+    }
+
+    private Map<Long, String> fetchStickerNames(List<ExchangeRequest> requests) {
+        Set<Long> stickerIds = new java.util.HashSet<>();
+        requests.forEach(r -> {
+            if (r.getRequestedStickerId() != null) {
+                stickerIds.add(r.getRequestedStickerId());
+            }
+            if (r.getOfferedStickerId() != null) {
+                stickerIds.add(r.getOfferedStickerId());
+            }
+        });
+
+        if (stickerIds.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        return stickerRepository.findAllById(stickerIds).stream()
+                .collect(Collectors.toMap(com.daspawnw.sammelalbum.model.Sticker::getId,
+                        com.daspawnw.sammelalbum.model.Sticker::getName));
     }
 
     private Map<Long, User> fetchPartners(List<ExchangeRequest> requests, Function<ExchangeRequest, Long> idExtractor) {
@@ -424,7 +456,7 @@ public class ExchangeService {
                 .collect(Collectors.toMap(User::getId, Function.identity()));
     }
 
-    private ExchangeRequestDto mapToDto(ExchangeRequest request, User partner) {
+    private ExchangeRequestDto mapToDto(ExchangeRequest request, User partner, Map<Long, String> stickerNames) {
         ExchangeRequestDto.ExchangeRequestDtoBuilder builder = ExchangeRequestDto.builder()
                 .id(request.getId())
                 .requesterId(request.getRequesterId())
@@ -438,7 +470,9 @@ public class ExchangeService {
                 .createdAt(request.getCreatedAt())
                 .updatedAt(request.getUpdatedAt())
                 .requesterClosed(request.getRequesterClosed())
-                .offererClosed(request.getOffererClosed());
+                .offererClosed(request.getOffererClosed())
+                .requestedStickerName(stickerNames.getOrDefault(request.getRequestedStickerId(), "Unknown"))
+                .offeredStickerName(stickerNames.getOrDefault(request.getOfferedStickerId(), null));
 
         if (request.getStatus() == ExchangeStatus.EXCHANGE_INTERREST && partner != null) {
             builder.partnerFirstname(partner.getFirstname());

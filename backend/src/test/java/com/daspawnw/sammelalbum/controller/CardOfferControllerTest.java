@@ -129,6 +129,7 @@ public class CardOfferControllerTest {
                                 .content(objectMapper.writeValueAsString(request)))
                                 .andExpect(status().isOk())
                                 .andExpect(jsonPath("$.stickerId").value(1))
+                                .andExpect(jsonPath("$.stickerName").value("Sticker 1"))
                                 .andExpect(jsonPath("$.offerPayed").value(true))
                                 .andExpect(jsonPath("$.offerFreebie").value(false))
                                 .andExpect(jsonPath("$.offerExchange").value(false));
@@ -147,7 +148,9 @@ public class CardOfferControllerTest {
                 mockMvc.perform(get("/api/card-offers")
                                 .header("Authorization", aliceToken))
                                 .andExpect(status().isOk())
-                                .andExpect(jsonPath("$", hasSize(2)));
+                                .andExpect(jsonPath("$", hasSize(2)))
+                                .andExpect(jsonPath("$[0].stickerName").value("Sticker 1"))
+                                .andExpect(jsonPath("$[1].stickerName").value("Sticker 2"));
         }
 
         @Test

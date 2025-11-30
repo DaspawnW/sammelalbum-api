@@ -1,0 +1,267 @@
+{
+    "FOOTER": {
+        "IMPRINT": "Imprint",
+        "PRIVACY": "Data Privacy"
+    },
+    "LANDING": {
+        "TITLE": "Welcome to Sammelalbum",
+        "SUBTITLE": "The exchange portal for our club",
+        "DESCRIPTION": "This portal is only as a project to make for the club it easier to perform the exchange of stickers and that as soon as the interrest is gone I'll close again this website and the data will be deleted.",
+        "PRIVACY_HINT": "Further details regarding data usage can be found in the",
+        "PRIVACY_LINK": "Data Privacy Statement",
+        "LOGIN": "Login",
+        "REGISTER": "Register",
+        "FEATURES": {
+            "MANAGE_TITLE": "Manage Collection",
+            "MANAGE_DESC": "Keep a complete overview of your sticker collection at all times. Easily mark which stickers you already own and which ones are still missing to complete your album. The intuitive interface makes managing your duplicate stickers a breeze. This way, you always know exactly what you can offer for trade.",
+            "MATCHES_TITLE": "Find Matches",
+            "MATCHES_DESC": "Our intelligent algorithm automatically finds the perfect exchange partners for you. It compares your missing stickers with the duplicates of other users and instantly shows you matching results. You no longer have to painstakingly search through lists or write messages just to find someone. Save time and focus on completing your collection.",
+            "EXCHANGES_TITLE": "Organize Exchanges",
+            "EXCHANGES_DESC": "Organize your trades directly through the portal. Propose an exchange, negotiate details, and track the status until the stickers have safely arrived in your hands. The system helps you keep track of open, accepted, and completed trades. This makes trading safe, transparent, and efficient for everyone involved."
+        }
+    },
+    "APP": {
+        "TITLE": "Sammelalbum"
+    },
+    "NAV": {
+        "DASHBOARD": "Dashboard",
+        "OFFERS": "My Offers",
+        "SEARCHES": "My Searches",
+        "MATCHES": "Matches",
+        "EXCHANGES": "Exchanges",
+        "LOGOUT": "Sign out"
+    },
+    "COMMON": {
+        "CANCEL": "Cancel",
+        "REMOVE": "Remove"
+    },
+    "AUTH": {
+        "LOGIN": {
+            "TITLE": "Sign in to your account",
+            "USERNAME": "Username",
+            "PASSWORD": "Password",
+            "SUBMIT": "Sign in",
+            "REGISTER_LINK": "Don't have an account? Register",
+            "ERROR": "Invalid username or password"
+        },
+        "REGISTER": {
+            "TITLE": "Create your account",
+            "SUBTITLE": "Create your new account",
+            "USERNAME": "Username",
+            "PASSWORD": "Password",
+            "EMAIL": "Email address",
+            "FIRSTNAME": "First Name",
+            "LASTNAME": "Last Name",
+            "CONTACT": "Contact (Optional)",
+            "VALIDATION_CODE": "Validation Code",
+            "SUBMIT": "Register",
+            "LOGIN_LINK": "Already have an account? Sign in",
+            "ERROR": "Registration failed. Please check your inputs and validation code."
+        }
+    },
+    "DASHBOARD": {
+        "WELCOME": "Welcome back, {{firstname}} {{lastname}}!",
+        "OFFERS": {
+            "TITLE": "My Offers",
+            "DESC": "Manage your card offers",
+            "ACTION": "View Offers"
+        },
+        "SEARCHES": {
+            "TITLE": "My Searches",
+            "DESC": "Manage your card searches",
+            "ACTION": "View Searches"
+        },
+        "MATCHES": {
+            "TITLE": "Matches",
+            "DESC": "See who has what you need",
+            "ACTION": "View Matches"
+        },
+        "EXCHANGES": {
+            "TITLE": "Exchanges",
+            "DESC": "Track your card exchanges",
+            "ACTION": "View Exchanges",
+            "RECEIVED": "Received Offers",
+            "SENT": "Sent Requests",
+            "TABLE": {
+                "ID": "ID",
+                "TYPE": "Type",
+                "STATUS": "Status",
+                "PARTNER": "Partner",
+                "ACTIONS": "Actions",
+                "VIEW": "View",
+                "TYPES": {
+                    "EXCHANGE": "Exchange",
+                    "PAYED": "Payed",
+                    "FREEBIE": "Freebie"
+                },
+                "STATUSES": {
+                    "INITIAL": "Initial",
+                    "MAIL_SEND": "Mail Sent",
+                    "EXCHANGE_INTERREST": "Interest",
+                    "EXCHANGE_COMPLETED": "Completed",
+                    "EXCHANGE_CANCELED": "Canceled"
+                }
+            },
+            "EMPTY_RECEIVED": "No received offers.",
+            "EMPTY_SENT": "No sent requests."
+        }
+    },
+    "EXCHANGES": {
+        "TITLE": "Exchange Requests",
+        "RECEIVED": "Received Offers",
+        "SENT": "Sent Requests",
+        "CONTACT_INFO_WARNING": "Note: The name and contact details of the person will be visible as soon as they confirm interest in a possible transaction.",
+        "FILTER_STATUS": "Filter Status",
+        "TABLE": {
+            "ID": "ID",
+            "TYPE": "Type",
+            "STATUS": "Status",
+            "PARTNER": "Partner",
+            "PARTNER_ID": "Partner ID",
+            "REQUESTED": "Requested",
+            "OFFERED": "Offered",
+            "ACTIONS": "Actions",
+            "VIEW": "View",
+            "TYPES": {
+                "EXCHANGE": "Exchange",
+                "PAYED": "Purchase",
+                "FREEBIE": "Gift"
+            },
+            "STATUSES": {
+                "INITIAL": "Open",
+                "MAIL_SEND": "Mail Sent",
+                "EXCHANGE_INTERREST": "Interest",
+                "EXCHANGE_COMPLETED": "Completed",
+                "EXCHANGE_CANCELED": "Canceled",
+                "STATUS_RECEIVED": "Already Received",
+                "STATUS_GIVEN": "Already Given"
+            }
+        },
+        "EMPTY_RECEIVED": "No received offers found.",
+        "EMPTY_SENT": "No sent requests found."
+    },
+    "OFFERS": {
+        "TITLE": "My Offers",
+        "CREATE": "Create Offer",
+        "DELETE_SELECTED": "Delete Selected",
+        "CREATE_MODAL": {
+            "TITLE": "Create New Offers",
+            "STICKER_IDS": "Sticker IDs",
+            "STICKER_IDS_PLACEHOLDER": "1\n2\n3\n...",
+            "STICKER_IDS_HINT": "Enter one sticker ID per line",
+            "OFFER_TYPES": "Offer Types",
+            "FAIR_TRADE_WARNING": "Sales should be fair and correspond to the card's purchase value!",
+            "ERROR_NO_TYPE": "Please select at least one offer type",
+            "ERROR_NO_IDS": "Please enter at least one valid sticker ID",
+            "ERROR_GENERAL": "Error creating offers. Please try again.",
+            "SUBMIT": "Create",
+            "CREATING": "Creating...",
+            "CANCEL": "Cancel"
+        },
+        "DELETE_MODAL": {
+            "TITLE": "Delete Offers",
+            "CONFIRM": "Do you really want to delete {{count}} offer(s)? This action cannot be undone.",
+            "ERROR_GENERAL": "Error deleting offers. Please try again.",
+            "DELETE": "Delete",
+            "DELETING": "Deleting...",
+            "CANCEL": "Cancel"
+        },
+        "TABLE": {
+            "CARD_ID": "Sticker ID",
+            "CARD_NAME": "Sticker Name",
+            "TYPE": "Type",
+            "ACTIONS": "Actions",
+            "DELETE": "Delete",
+            "TYPES": {
+                "PAYED": "Sale",
+                "EXCHANGE": "Exchange",
+                "FREEBIE": "Freebie"
+            }
+        },
+        "EMPTY": "No offers found."
+    },
+    "SEARCHES": {
+        "TITLE": "My Searches",
+        "CREATE": "Create Search",
+        "DELETE_SELECTED": "Delete Selected",
+        "CREATE_MODAL": {
+            "TITLE": "Create New Searches",
+            "STICKER_IDS": "Sticker IDs",
+            "STICKER_IDS_PLACEHOLDER": "1\n2\n3\n...",
+            "STICKER_IDS_HINT": "Enter one sticker ID per line",
+            "ERROR_NO_IDS": "Please enter at least one valid sticker ID",
+            "ERROR_GENERAL": "Error creating searches. Please try again.",
+            "SUBMIT": "Create",
+            "CREATING": "Creating...",
+            "CANCEL": "Cancel"
+        },
+        "DELETE_MODAL": {
+            "TITLE": "Delete Searches",
+            "CONFIRM": "Do you really want to delete {{count}} search(es)? This action cannot be undone.",
+            "ERROR_GENERAL": "Error deleting searches. Please try again.",
+            "DELETE": "Delete",
+            "DELETING": "Deleting...",
+            "CANCEL": "Cancel"
+        },
+        "TABLE": {
+            "CARD_ID": "Sticker ID",
+            "CARD_NAME": "Sticker Name",
+            "STATUS": "Status",
+            "ACTIONS": "Actions",
+            "DELETE": "Delete",
+            "RESERVED": "Reserved",
+            "AVAILABLE": "Available"
+        },
+        "EMPTY": "No searches found."
+    },
+    "MATCHES": {
+        "TITLE": "Possible Exchange Requests",
+        "PRIVACY_HINT": "Note: The name and contact details of the person will be visible as soon as they have confirmed interest in a potential transaction.",
+        "FAIRNESS_HINT": "Note: Every provider is encouraged to ensure that the sale is fair and corresponds to the purchase value of the card!",
+        "TABS": {
+            "EXCHANGE": "Exchange",
+            "FREEBIE": "Freebie",
+            "PAYED": "Payed"
+        },
+        "TABLE": {
+            "USER_ID": "User ID",
+            "OFFERED": "Offered Items",
+            "REQUESTED": "Requested Items",
+            "ACTIONS": "Actions",
+            "VIEW": "Create Request"
+        },
+        "EMPTY": "No matches found."
+    },
+    "EXCHANGE_MODAL": {
+        "TITLE": "Create Exchange Request",
+        "EXCHANGE_DESC": "Select items to give and receive. You can add multiple pairs.",
+        "GIFT_DESC": "Select the stickers you want to receive from the other person.",
+        "GIVE": "Give",
+        "GET": "Get",
+        "SELECT_ITEM": "Select Item",
+        "ADDED_PAIRS": "Added Pairs",
+        "SELECTED": "items selected",
+        "CREATE_REQUEST": "Create Request",
+        "DETAILS_TITLE": "Exchange Details",
+        "PARTNER_CONTACT": "Partner Contact",
+        "CLOSED_BY_ME": "Closed by you",
+        "CLOSED_BY_PARTNER": "Closed by partner",
+        "ACTIONS": {
+            "ACCEPT": "Accept Exchange",
+            "DECLINE": "Decline Exchange",
+            "CLOSE": "Close Transaction",
+            "CONFIRM_CLOSE": "Confirm Close"
+        },
+        "CLOSE_WARNING_TITLE": "Close Transaction?",
+        "CLOSE_WARNING_DESC": "This will complete the exchange and remove the cards from your lists. This action cannot be undone."
+    },
+    "PAGINATION": {
+        "PREVIOUS": "Previous",
+        "NEXT": "Next",
+        "PAGE": "Page",
+        "OF": "of",
+        "SHOWING": "Showing",
+        "TO": "to",
+        "RESULTS": "results"
+    }
+}

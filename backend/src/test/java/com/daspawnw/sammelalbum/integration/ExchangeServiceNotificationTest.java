@@ -9,6 +9,8 @@ import com.daspawnw.sammelalbum.service.notification.NotificationService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
@@ -37,6 +39,9 @@ public class ExchangeServiceNotificationTest {
     @MockBean
     private NotificationService notificationService;
 
+    @Captor
+    private ArgumentCaptor<List<String>> captor;
+
     @Test
     void processInitialRequests_ShouldSendNotificationsAndUpdateStatus() {
         // Arrange: Create an INITIAL exchange request
@@ -56,7 +61,6 @@ public class ExchangeServiceNotificationTest {
 
         // Assert:
         // 1. Verify NotificationService was called for Offerer 4
-        org.mockito.ArgumentCaptor<List<String>> captor = org.mockito.ArgumentCaptor.forClass(List.class);
         verify(notificationService, times(1)).sendExchangeNotification(eq(4L), captor.capture());
 
         // Verify the message content
@@ -91,7 +95,6 @@ public class ExchangeServiceNotificationTest {
         exchangeService.processInitialRequests();
 
         // Assert
-        org.mockito.ArgumentCaptor<List<String>> captor = org.mockito.ArgumentCaptor.forClass(List.class);
         verify(notificationService, times(1)).sendExchangeNotification(eq(4L), captor.capture());
 
         List<String> messages = captor.getValue();
