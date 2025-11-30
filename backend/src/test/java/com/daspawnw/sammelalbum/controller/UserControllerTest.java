@@ -36,8 +36,24 @@ class UserControllerTest {
         @Autowired
         private com.daspawnw.sammelalbum.repository.CredentialsRepository credentialsRepository;
 
+        @Autowired
+        private com.daspawnw.sammelalbum.repository.CardOfferRepository cardOfferRepository;
+
+        @Autowired
+        private com.daspawnw.sammelalbum.repository.CardSearchRepository cardSearchRepository;
+
+        @Autowired
+        private com.daspawnw.sammelalbum.repository.ExchangeRequestRepository exchangeRequestRepository;
+
+        @Autowired
+        private com.daspawnw.sammelalbum.repository.EmailOutboxRepository emailOutboxRepository;
+
         @BeforeEach
         void setUp() {
+                emailOutboxRepository.deleteAll();
+                exchangeRequestRepository.deleteAll();
+                cardOfferRepository.deleteAll();
+                cardSearchRepository.deleteAll();
                 credentialsRepository.deleteAll();
                 userRepository.deleteAll();
         }
