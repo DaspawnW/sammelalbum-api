@@ -243,5 +243,10 @@
         "SHOWING": "Zeige",
         "TO": "bis",
         "RESULTS": "Ergebnisse"
+    },
+    "LOADING": {
+        "TEXT": "Laden...",
+        "ACTIVE": "aktiv",
+        "RESET": "Hängt? Klicken zum Zurücksetzen"
     }
 }

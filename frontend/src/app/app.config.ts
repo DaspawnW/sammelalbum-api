@@ -17,6 +17,7 @@ export function customLoaderFactory(http: HttpClient) {
 
 import { routes } from './app.routes';
 import { authInterceptor } from './interceptors/auth-interceptor';
+import { loadingInterceptor } from './interceptors/loading.interceptor';
 
 import { ApiConfiguration } from './api/api-configuration';
 import { environment } from '../environments/environment';
@@ -25,7 +26,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
-    provideHttpClient(withInterceptors([authInterceptor])),
+    provideHttpClient(withInterceptors([loadingInterceptor, authInterceptor])),
     {
       provide: ApiConfiguration,
       useValue: { rootUrl: environment.apiUrl }
