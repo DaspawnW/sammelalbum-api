@@ -9,6 +9,9 @@
             <p class="mt-2 text-center text-sm text-gray-600">
                 {{ 'AUTH.REGISTER.SUBTITLE' | translate }}
             </p>
+            <p class="mt-2 text-center text-xs text-gray-500 italic max-w-sm mx-auto">
+                {{ 'AUTH.REGISTER.PRIVACY_HINT' | translate }}
+            </p>
         </div>
         <form class="mt-8 space-y-6" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
             <div class="rounded-md shadow-sm -space-y-px">
@@ -42,6 +45,13 @@
                         class="appearance-none rounded-lg relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-psv-green focus:border-psv-green focus:z-10 sm:text-sm transition-colors duration-200"
                         [placeholder]="'AUTH.REGISTER.LASTNAME' | translate">
                 </div>
+                <div class="mb-4">
+                    <label for="contact" class="sr-only">{{ 'AUTH.REGISTER.CONTACT' | translate }}</label>
+                    <input id="contact" formControlName="contact" type="text"
+                        class="appearance-none rounded-lg relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-psv-green focus:border-psv-green focus:z-10 sm:text-sm transition-colors duration-200"
+                        [placeholder]="'AUTH.REGISTER.CONTACT' | translate">
+                </div>
+
                 <div class="mb-4">
                     <label for="validationCode" class="sr-only">{{ 'AUTH.REGISTER.VALIDATION_CODE' | translate
                         }}</label>

@@ -1,0 +1,14 @@
+node_modules/
+.gauge/
+reports/
+
+# Test output files
+test_output*.log
+test_output*.txt
+
+# Debug screenshots
+offer-*.png
+*.webp
+
+# Logs
+logs/

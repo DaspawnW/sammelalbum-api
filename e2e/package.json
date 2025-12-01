@@ -1,0 +1,21 @@
+{
+    "name": "sammelalbum-e2e",
+    "version": "1.0.0",
+    "description": "E2E tests for Sammelalbum using Gauge and Playwright",
+    "scripts": {
+        "test": "./reset-db.sh && gauge run specs",
+        "gauge": "gauge"
+    },
+    "dependencies": {
+        "@getgauge/cli": "^1.6.1",
+        "playwright": "^1.49.0",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.7.2"
+    },
+    "ts-node": {
+        "files": true
+    },
+    "devDependencies": {
+        "gauge-ts": "^0.3.5"
+    }
+}

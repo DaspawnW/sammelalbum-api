@@ -12,5 +12,16 @@ export default defineConfig({
         cache: {
             dir: './node_modules/.vitest',
         },
+        coverage: {
+            provider: 'v8',
+            reporter: ['text', 'html', 'json-summary'],
+            reportsDirectory: './coverage',
+            exclude: [
+                'node_modules/',
+                'src/test-setup.ts',
+                '**/*.spec.ts',
+                '**/*.config.ts',
+            ],
+        },
     },
 });

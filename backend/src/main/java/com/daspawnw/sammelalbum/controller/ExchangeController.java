@@ -1,6 +1,7 @@
 package com.daspawnw.sammelalbum.controller;
 
 import com.daspawnw.sammelalbum.model.ExchangeRequest;
+import com.daspawnw.sammelalbum.model.ExchangeType;
 import com.daspawnw.sammelalbum.security.CustomUserDetails;
 import com.daspawnw.sammelalbum.service.ExchangeService;
 import lombok.Data;
@@ -126,6 +127,6 @@ public class ExchangeController {
         private Long offererId;
         private Long requestedStickerId;
         private Long offeredStickerId;
-        private com.daspawnw.sammelalbum.model.ExchangeType exchangeType;
+        private ExchangeType exchangeType;
     }
 }

@@ -7,6 +7,7 @@ import com.daspawnw.sammelalbum.repository.CardOfferRepository;
 import com.daspawnw.sammelalbum.repository.ExchangeRequestRepository;
 import com.daspawnw.sammelalbum.model.ExchangeType;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ExchangeService {
 
     private final ExchangeRequestRepository exchangeRequestRepository;
@@ -38,6 +40,7 @@ public class ExchangeService {
     @Transactional
     public ExchangeRequest createExchangeRequest(Long requesterId, Long offererId, Long requestedStickerId,
             Long offeredStickerId, ExchangeType type) {
+        log.info("createExchangeRequest called with requesterId: {}, offererId: {}", requesterId, offererId);
         if (requesterId.equals(offererId)) {
             throw new IllegalArgumentException("Cannot create exchange request with yourself");
         }
@@ -73,7 +76,9 @@ public class ExchangeService {
                 .status(ExchangeStatus.INITIAL)
                 .build();
 
-        return exchangeRequestRepository.save(request);
+        ExchangeRequest saved = exchangeRequestRepository.save(request);
+        log.info("Saved request with ID: {}", saved.getId());
+        return saved;
     }
 
     private void validateExchange(Long requesterId, Long offererId, Long requestedStickerId, Long offeredStickerId) {
@@ -403,7 +408,9 @@ public class ExchangeService {
     }
 
     public List<ExchangeRequestDto> getSentRequests(Long requesterId) {
+        log.info("getSentRequests called for requesterId: {}", requesterId);
         List<ExchangeRequest> requests = exchangeRequestRepository.findByRequesterId(requesterId);
+        log.info("Found {} requests for requesterId: {}", requests.size(), requesterId);
         Map<Long, User> partners = fetchPartners(requests, ExchangeRequest::getOffererId);
         Map<Long, String> stickerNames = fetchStickerNames(requests);
 

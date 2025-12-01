@@ -3,6 +3,10 @@ package com.daspawnw.sammelalbum.service;
 import com.daspawnw.sammelalbum.dto.MatchDtos.MatchResponse;
 import com.daspawnw.sammelalbum.dto.MatchDtos.MatchStickerDto;
 import com.daspawnw.sammelalbum.model.CardOffer;
+import com.daspawnw.sammelalbum.model.CardSearch;
+import com.daspawnw.sammelalbum.model.ExchangeRequest;
+import com.daspawnw.sammelalbum.model.ExchangeStatus;
+import com.daspawnw.sammelalbum.model.ExchangeType;
 import com.daspawnw.sammelalbum.repository.CardOfferRepository;
 import com.daspawnw.sammelalbum.repository.MatchProjection;
 import lombok.RequiredArgsConstructor;
@@ -52,9 +56,12 @@ public class MatchService {
                                 .map(MatchProjection::getUserId)
                                 .toList();
 
-                // Items Requested: What partner offers that I want
+                System.out.println("DEBUG: populateMatchDetails - isFreebie: " + isFreebie + ", userIds: " + userIds);
+
+                // Items Requested: What partner offers that I want (Incoming)
                 Map<Long, List<MatchStickerDto>> requestedMap = cardOfferRepository
-                                .findMatchingOffers(currentUserId, userIds, isFreebie, isPayed, isExchange).stream()
+                                .findMatchingOffers(currentUserId, userIds, isFreebie, isPayed, isExchange)
+                                .stream()
                                 .collect(Collectors.groupingBy(
                                                 CardOffer::getUserId,
                                                 Collectors.mapping(
@@ -63,12 +70,20 @@ public class MatchService {
                                                                                 offer.getSticker().getName()),
                                                                 Collectors.toList())));
 
-                // Items Offered: What I offer that partner wants (only for exchange)
+                System.out.println("DEBUG: requestedMap size: " + requestedMap.size());
+                if (!requestedMap.isEmpty()) {
+                        System.out.println("DEBUG: requestedMap keys: " + requestedMap.keySet());
+                        requestedMap.forEach((k, v) -> System.out.println("DEBUG: Key: " + k + ", Val: " + v.size()));
+                }
+
+                // Items Offered: What I offer that partner wants (Outgoing)
                 Map<Long, List<MatchStickerDto>> offeredMap;
-                if (isExchange) {
-                        offeredMap = cardSearchRepository.findMatchingSearches(userIds, currentUserId).stream()
+                if (isExchange || isFreebie) {
+                        offeredMap = cardSearchRepository
+                                        .findMatchingSearches(userIds, currentUserId, isFreebie, isPayed, isExchange)
+                                        .stream()
                                         .collect(Collectors.groupingBy(
-                                                        com.daspawnw.sammelalbum.model.CardSearch::getUserId,
+                                                        CardSearch::getUserId,
                                                         Collectors.mapping(
                                                                         search -> new MatchStickerDto(
                                                                                         search.getSticker().getId(),
@@ -80,13 +95,13 @@ public class MatchService {
 
                 // Fetch active exchange requests to filter out already requested items
                 // Optimize: Only fetch requests for the users in the current page
-                List<com.daspawnw.sammelalbum.model.ExchangeRequest> activeRequests = exchangeRequestRepository
+                List<ExchangeRequest> activeRequests = exchangeRequestRepository
                                 .findByRequesterIdAndOffererIdIn(currentUserId, userIds).stream()
-                                .filter(req -> req.getStatus() == com.daspawnw.sammelalbum.model.ExchangeStatus.INITIAL
+                                .filter(req -> req.getStatus() == ExchangeStatus.INITIAL
                                                 ||
-                                                req.getStatus() == com.daspawnw.sammelalbum.model.ExchangeStatus.MAIL_SEND
+                                                req.getStatus() == ExchangeStatus.MAIL_SEND
                                                 ||
-                                                req.getStatus() == com.daspawnw.sammelalbum.model.ExchangeStatus.EXCHANGE_INTERREST)
+                                                req.getStatus() == ExchangeStatus.EXCHANGE_INTERREST)
                                 .toList();
 
                 List<MatchResponse> responseList = matches.getContent().stream()
@@ -102,11 +117,11 @@ public class MatchService {
                                                                         &&
                                                                         req.getRequestedStickerId().equals(item.getId())
                                                                         &&
-                                                                        (req.getExchangeType() == com.daspawnw.sammelalbum.model.ExchangeType.FREEBIE
+                                                                        (req.getExchangeType() == ExchangeType.FREEBIE
                                                                                         ||
-                                                                                        req.getExchangeType() == com.daspawnw.sammelalbum.model.ExchangeType.PAYED
+                                                                                        req.getExchangeType() == ExchangeType.PAYED
                                                                                         ||
-                                                                                        req.getExchangeType() == com.daspawnw.sammelalbum.model.ExchangeType.EXCHANGE)))
+                                                                                        req.getExchangeType() == ExchangeType.EXCHANGE)))
                                                         .collect(Collectors.toList());
                                         response.setItemsRequested(filteredRequested);
 
@@ -138,12 +153,16 @@ public class MatchService {
                                         if (isExchange) {
                                                 return !response.getItemsRequested().isEmpty()
                                                                 && !response.getItemsOffered().isEmpty();
+                                        } else if (isFreebie) {
+                                                return !response.getItemsRequested().isEmpty()
+                                                                || !response.getItemsOffered().isEmpty();
                                         } else {
                                                 return !response.getItemsRequested().isEmpty();
                                         }
                                 })
                                 .collect(Collectors.toList());
 
+                System.out.println("DEBUG: Final responseList size: " + responseList.size());
                 return new org.springframework.data.domain.PageImpl<>(responseList, matches.getPageable(),
                                 matches.getTotalElements());
         }

@@ -90,6 +90,10 @@ export class ExchangeRequestModalComponent implements OnChanges {
         return !!item.id && this.selectedItemIds.has(item.id);
     }
 
+    compareFn(c1: MatchStickerDto, c2: MatchStickerDto): boolean {
+        return c1 && c2 ? c1.id === c2.id : c1 === c2;
+    }
+
     // Submission
     onSubmit() {
         if (!this.match?.userId) return;

@@ -4,6 +4,7 @@ import com.daspawnw.sammelalbum.dto.CardSearchDtos.BulkCardSearchRequest;
 import com.daspawnw.sammelalbum.dto.CardSearchDtos.CardSearchRequest;
 import com.daspawnw.sammelalbum.dto.CardSearchDtos.CardSearchResponse;
 import com.daspawnw.sammelalbum.model.CardSearch;
+import com.daspawnw.sammelalbum.model.Sticker;
 import com.daspawnw.sammelalbum.repository.CardSearchRepository;
 import com.daspawnw.sammelalbum.repository.StickerRepository;
 import lombok.RequiredArgsConstructor;
@@ -61,7 +62,7 @@ public class CardSearchService {
         // Load all stickers in one query to avoid N+1
         List<Long> stickerIds = saved.stream().map(CardSearch::getStickerId).distinct().collect(Collectors.toList());
         var stickerMap = stickerRepository.findAllById(stickerIds).stream()
-                .collect(Collectors.toMap(com.daspawnw.sammelalbum.model.Sticker::getId, s -> s));
+                .collect(Collectors.toMap(Sticker::getId, s -> s));
         saved.forEach(search -> search.setSticker(stickerMap.get(search.getStickerId())));
         return saved.stream()
                 .map(this::mapToResponse)

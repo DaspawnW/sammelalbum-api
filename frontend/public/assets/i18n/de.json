@@ -52,7 +52,8 @@
             "EMAIL": "E-Mail Adresse",
             "FIRSTNAME": "Vorname",
             "LASTNAME": "Nachname",
-            "CONTACT": "Kontakt (Optional)",
+            "CONTACT": "Kontakt Informationen",
+            "PRIVACY_HINT": "Nur Vorname, Nachname und Kontakt Informationen werden bei einem Tausch dem Gegenüber angezeigt, alle anderen Informationen sind lediglich für den Login bzw den Versand von Benachrichtigungsmails.",
             "VALIDATION_CODE": "Validierungscode",
             "SUBMIT": "Registrieren",
             "LOGIN_LINK": "Bereits ein Konto? Anmelden",
@@ -118,7 +119,9 @@
                 "PAYED": "Verkauf",
                 "EXCHANGE": "Tausch",
                 "FREEBIE": "Geschenk"
-            }
+            },
+            "STATUS": "Status",
+            "AVAILABLE": "Verfügbar"
         },
         "EMPTY": "Keine Angebote gefunden."
     },

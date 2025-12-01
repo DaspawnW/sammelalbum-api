@@ -5,6 +5,7 @@ import com.daspawnw.sammelalbum.dto.CardOfferDtos.BulkUpdateOfferRequest;
 import com.daspawnw.sammelalbum.dto.CardOfferDtos.CardOfferRequest;
 import com.daspawnw.sammelalbum.dto.CardOfferDtos.CardOfferResponse;
 import com.daspawnw.sammelalbum.model.CardOffer;
+import com.daspawnw.sammelalbum.model.Sticker;
 import com.daspawnw.sammelalbum.repository.CardOfferRepository;
 import com.daspawnw.sammelalbum.repository.StickerRepository;
 import lombok.RequiredArgsConstructor;
@@ -71,7 +72,7 @@ public class CardOfferService {
         // Load all stickers in one query to avoid N+1
         List<Long> stickerIds = saved.stream().map(CardOffer::getStickerId).distinct().collect(Collectors.toList());
         var stickerMap = stickerRepository.findAllById(stickerIds).stream()
-                .collect(Collectors.toMap(com.daspawnw.sammelalbum.model.Sticker::getId, s -> s));
+                .collect(Collectors.toMap(Sticker::getId, s -> s));
         saved.forEach(offer -> offer.setSticker(stickerMap.get(offer.getStickerId())));
         return saved.stream()
                 .map(this::mapToResponse)
@@ -117,6 +118,11 @@ public class CardOfferService {
             // Delete up to 'count' entries
             int limit = (int) Math.min(count, available.size());
             toDelete.addAll(available.subList(0, limit));
+        });
+
+        // Handle exchange cancellations for all offers to be deleted
+        toDelete.forEach(offer -> {
+            exchangeService.handleCardOfferDeletion(offer.getId());
         });
 
         cardOfferRepository.deleteAll(toDelete);

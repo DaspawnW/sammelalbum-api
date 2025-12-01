@@ -51,6 +51,9 @@ public class ExchangeReservationIntegrationTest {
         @Autowired
         private JdbcTemplate jdbcTemplate;
 
+        @Autowired
+        private jakarta.persistence.EntityManager entityManager;
+
         private String offererToken;
         private String requesterToken;
 
@@ -197,41 +200,41 @@ public class ExchangeReservationIntegrationTest {
 
         @Test
         void shouldExcludeReservedCardsFromNativeMatchmakingQueries() {
-                // 1. Setup Freebie Match Scenario
-                // User 1 offers Sticker 10 (Freebie)
-                // User 2 needs Sticker 10
+                // Use User 6 (No Match) to avoid interference from existing test data
+                // User 6 offers Sticker 15 (Freebie)
+                // User 7 needs Sticker 15
                 CardOffer freebieOffer = CardOffer.builder()
-                                .userId(1L)
-                                .sticker(com.daspawnw.sammelalbum.model.Sticker.builder().id(10L).build()) // Assuming
-                                                                                                           // sticker 10
-                                                                                                           // exists
-                                .stickerId(10L)
+                                .userId(6L)
+                                .sticker(com.daspawnw.sammelalbum.model.Sticker.builder().id(15L).build())
+                                .stickerId(15L)
                                 .offerFreebie(true)
                                 .isReserved(false)
                                 .build();
                 cardOfferRepository.save(freebieOffer);
 
                 CardSearch freebieSearch = CardSearch.builder()
-                                .userId(2L)
-                                .stickerId(10L)
+                                .userId(7L)
+                                .stickerId(15L)
                                 .isReserved(false)
                                 .build();
                 cardSearchRepository.save(freebieSearch);
+                entityManager.flush();
 
-                // Verify match exists
-                var freebieMatches = cardOfferRepository.findFreebieMatches(2L,
+                // Verify match exists (User 7 looking for freebies)
+                var freebieMatches = cardOfferRepository.findFreebieMatches(7L,
                                 org.springframework.data.domain.Pageable.unpaged());
-                assertTrue(freebieMatches.stream().anyMatch(m -> m.getUserId().equals(1L)),
+                assertTrue(freebieMatches.stream().anyMatch(m -> m.getUserId().equals(6L)),
                                 "Should find freebie match before reservation");
 
                 // Reserve the offer
                 freebieOffer.setIsReserved(true);
                 cardOfferRepository.save(freebieOffer);
+                entityManager.flush();
 
                 // Verify match is gone
-                freebieMatches = cardOfferRepository.findFreebieMatches(2L,
+                freebieMatches = cardOfferRepository.findFreebieMatches(7L,
                                 org.springframework.data.domain.Pageable.unpaged());
-                assertFalse(freebieMatches.stream().anyMatch(m -> m.getUserId().equals(1L)),
+                assertFalse(freebieMatches.stream().anyMatch(m -> m.getUserId().equals(6L)),
                                 "Should NOT find freebie match after offer reservation");
 
                 // Reset offer, reserve search
@@ -239,11 +242,12 @@ public class ExchangeReservationIntegrationTest {
                 cardOfferRepository.save(freebieOffer);
                 freebieSearch.setIsReserved(true);
                 cardSearchRepository.save(freebieSearch);
+                entityManager.flush();
 
                 // Verify match is gone
-                freebieMatches = cardOfferRepository.findFreebieMatches(2L,
+                freebieMatches = cardOfferRepository.findFreebieMatches(7L,
                                 org.springframework.data.domain.Pageable.unpaged());
-                assertFalse(freebieMatches.stream().anyMatch(m -> m.getUserId().equals(1L)),
+                assertFalse(freebieMatches.stream().anyMatch(m -> m.getUserId().equals(6L)),
                                 "Should NOT find freebie match after search reservation");
         }
 

@@ -42,6 +42,7 @@
     --color-black: #000;
     --color-white: #fff;
     --spacing: 0.25rem;
+    --container-sm: 24rem;
     --container-md: 28rem;
     --container-3xl: 48rem;
     --container-7xl: 80rem;
@@ -425,6 +426,9 @@
   }
   .max-w-none {
     max-width: none;
+  }
+  .max-w-sm {
+    max-width: var(--container-sm);
   }
   .min-w-0 {
     min-width: calc(var(--spacing) * 0);
@@ -951,6 +955,9 @@
   }
   .uppercase {
     text-transform: uppercase;
+  }
+  .italic {
+    font-style: italic;
   }
   .underline {
     text-decoration-line: underline;

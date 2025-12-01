@@ -31,7 +31,18 @@ INSERT INTO stickers (id, name) VALUES
 (31, 'Sticker 31'), (32, 'Sticker 32'), (33, 'Sticker 33'), (34, 'Sticker 34'), (35, 'Sticker 35'),
 (36, 'Sticker 36'), (37, 'Sticker 37'), (38, 'Sticker 38'), (39, 'Sticker 39'), (40, 'Sticker 40'),
 (41, 'Sticker 41'), (42, 'Sticker 42'), (43, 'Sticker 43'), (44, 'Sticker 44'), (45, 'Sticker 45'),
-(46, 'Sticker 46'), (47, 'Sticker 47'), (48, 'Sticker 48'), (49, 'Sticker 49'), (50, 'Sticker 50');
+(46, 'Sticker 46'), (47, 'Sticker 47'), (48, 'Sticker 48'), (49, 'Sticker 49'), (50, 'Sticker 50'),
+(100, 'Sticker 100'), (101, 'Sticker 101'), (102, 'Sticker 102'), (103, 'Sticker 103'), (104, 'Sticker 104'),
+(105, 'Sticker 105'), (106, 'Sticker 106'), (107, 'Sticker 107'), (108, 'Sticker 108'), (109, 'Sticker 109'),
+(110, 'Sticker 110'), (111, 'Sticker 111'), (112, 'Sticker 112'), (113, 'Sticker 113'), (114, 'Sticker 114'),
+(115, 'Sticker 115'), (116, 'Sticker 116'), (117, 'Sticker 117'), (118, 'Sticker 118'), (119, 'Sticker 119'),
+(120, 'Sticker 120'), (121, 'Sticker 121'), (122, 'Sticker 122'), (123, 'Sticker 123'), (124, 'Sticker 124'),
+(125, 'Sticker 125'), (126, 'Sticker 126'), (127, 'Sticker 127'), (128, 'Sticker 128'), (129, 'Sticker 129'),
+(130, 'Sticker 130'), (131, 'Sticker 131'), (132, 'Sticker 132'), (133, 'Sticker 133'), (134, 'Sticker 134'),
+(135, 'Sticker 135'), (136, 'Sticker 136'), (137, 'Sticker 137'), (138, 'Sticker 138'), (139, 'Sticker 139'),
+(140, 'Sticker 140'), (141, 'Sticker 141'), (142, 'Sticker 142'), (143, 'Sticker 143'), (144, 'Sticker 144'),
+(145, 'Sticker 145'), (146, 'Sticker 146'), (147, 'Sticker 147'), (148, 'Sticker 148'), (149, 'Sticker 149'),
+(150, 'Sticker 150');
 
 -- ==========================================
 -- 1. MATCH SCENARIOS (Available for new requests)

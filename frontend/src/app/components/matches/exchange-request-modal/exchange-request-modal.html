@@ -25,7 +25,7 @@
                             <label class="block text-sm font-medium text-gray-700 mb-1">
                                 {{ 'EXCHANGE_MODAL.GET' | translate }} ({{ 'MATCHES.TABLE.REQUESTED' | translate }})
                             </label>
-                            <select [(ngModel)]="currentGive"
+                            <select [(ngModel)]="currentGive" [compareWith]="compareFn"
                                 class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-psv-green focus:border-psv-green sm:text-sm rounded-md">
                                 <option [ngValue]="null">{{ 'EXCHANGE_MODAL.SELECT_ITEM' | translate }}</option>
                                 <option *ngFor="let item of availableGiveItems" [ngValue]="item">
@@ -45,7 +45,7 @@
                             <label class="block text-sm font-medium text-gray-700 mb-1">
                                 {{ 'EXCHANGE_MODAL.GIVE' | translate }} ({{ 'MATCHES.TABLE.OFFERED' | translate }})
                             </label>
-                            <select [(ngModel)]="currentGet"
+                            <select [(ngModel)]="currentGet" [compareWith]="compareFn"
                                 class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-psv-green focus:border-psv-green sm:text-sm rounded-md">
                                 <option [ngValue]="null">{{ 'EXCHANGE_MODAL.SELECT_ITEM' | translate }}</option>
                                 <option *ngFor="let item of availableGetItems" [ngValue]="item">

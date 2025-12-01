@@ -2,6 +2,7 @@ package com.daspawnw.sammelalbum.service.notification;
 
 import com.daspawnw.sammelalbum.model.EmailOutbox;
 import com.daspawnw.sammelalbum.model.EmailStatus;
+import com.daspawnw.sammelalbum.model.User;
 import com.daspawnw.sammelalbum.repository.EmailOutboxRepository;
 import com.daspawnw.sammelalbum.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public class DatabaseNotificationService implements NotificationService {
         log.info("Persisting notification for Offerer ID: {}", offererId);
 
         String recipientEmail = userRepository.findById(offererId)
-                .map(com.daspawnw.sammelalbum.model.User::getMail)
+                .map(User::getMail)
                 .orElseThrow(() -> new IllegalArgumentException("User not found for ID: " + offererId));
 
         String body = String.join("\n", messages);
