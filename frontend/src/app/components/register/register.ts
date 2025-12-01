@@ -31,11 +31,11 @@ export class RegisterComponent {
   error = '';
 
   onSubmit() {
-    console.log('RegisterComponent.onSubmit called');
+
     if (this.registerForm.valid) {
       this.error = '';
       const val = this.registerForm.value;
-      console.log('Form is valid, attempting registration for:', val.username);
+
 
       // Ensure all required fields are present and not null/undefined
       if (val.username && val.password && val.mail && val.firstname && val.lastname && val.validationCode) {
@@ -49,9 +49,9 @@ export class RegisterComponent {
           validationCode: val.validationCode
         }).subscribe({
           next: (res) => {
-            console.log('Registration success, navigating to /', res);
+
             this.router.navigate(['/']).then(success => {
-              console.log('Navigation result:', success);
+
             });
           },
           error: (err) => {
@@ -61,7 +61,7 @@ export class RegisterComponent {
         });
       }
     } else {
-      console.log('Form is invalid', this.registerForm.errors);
+
     }
   }
 }

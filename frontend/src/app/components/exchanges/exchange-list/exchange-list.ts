@@ -52,14 +52,14 @@ export class ExchangeListComponent implements OnInit {
   }
 
   loadExchanges() {
-    console.log('ExchangeListComponent.loadExchanges called');
+
     this.loading = true;
     forkJoin({
       received: from(this.api.invoke(getReceivedOffers)),
       sent: from(this.api.invoke(getSentRequests))
     }).subscribe({
       next: (data) => {
-        console.log('Exchanges loaded, raw data:', JSON.stringify(data));
+
         this.allReceivedOffers = data.received || [];
         this.allSentRequests = data.sent || [];
 
@@ -162,10 +162,10 @@ export class ExchangeListComponent implements OnInit {
 
   private filterAndSort(data: ExchangeRequestDto[], type: 'received' | 'sent'): ExchangeRequestDto[] {
     // 1. Filter
-    console.log(`Filtering ${type} data. Total: ${data.length}. Selected statuses: ${Array.from(this.selectedStatuses).join(', ')}`);
+
     let result = data.filter(item => {
       const match = item.status && this.selectedStatuses.has(item.status);
-      console.log(`Item status: ${item.status}, Match: ${match}`);
+
       return match;
     });
 

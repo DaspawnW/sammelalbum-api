@@ -12,10 +12,7 @@ import { TranslateModule } from '@ngx-translate/core';
     <div *ngIf="isLoading" class="loading-overlay">
       <div class="spinner-container">
         <div class="spinner"></div>
-        <p class="loading-text">{{ 'LOADING.TEXT' | translate }} ({{ activeRequests }} {{ 'LOADING.ACTIVE' | translate }})</p>
-        <button (click)="forceReset()" class="reset-btn">
-          {{ 'LOADING.RESET' | translate }}
-        </button>
+        <p class="loading-text">{{ 'LOADING.TEXT' | translate }}</p>
       </div>
     </div>
   `,
@@ -62,26 +59,10 @@ import { TranslateModule } from '@ngx-translate/core';
       font-weight: 500;
       margin: 0;
     }
-
-    .reset-btn {
-      margin-top: 1rem;
-      padding: 0.5rem 1rem;
-      background: rgba(255, 255, 255, 0.2);
-      border: 1px solid white;
-      color: white;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 0.8rem;
-    }
-    
-    .reset-btn:hover {
-      background: rgba(255, 255, 255, 0.3);
-    }
   `]
 })
 export class LoadingSpinnerComponent implements OnInit, OnDestroy {
   isLoading = false;
-  activeRequests = 0;
   private subscription?: Subscription;
 
   constructor(
@@ -98,9 +79,7 @@ export class LoadingSpinnerComponent implements OnInit, OnDestroy {
             // Wrap in setTimeout to avoid ExpressionChangedAfterItHasBeenCheckedError
             // and allow other components (like Login) to update their view first.
             setTimeout(() => {
-              console.log('LoadingSpinnerComponent: isLoading set to', loading);
               this.isLoading = loading;
-              this.activeRequests = this.loadingService.getRequestCount();
               this.cdr.detectChanges(); // Force view update after the tick
             });
           });
@@ -129,10 +108,5 @@ export class LoadingSpinnerComponent implements OnInit, OnDestroy {
     } catch (error) {
       console.error('Error destroying LoadingSpinnerComponent:', error);
     }
-  }
-
-  forceReset(): void {
-    console.log('LoadingSpinnerComponent: Force reset clicked');
-    this.loadingService.reset();
   }
 }

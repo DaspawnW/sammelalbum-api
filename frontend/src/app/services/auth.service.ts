@@ -30,7 +30,7 @@ export class AuthService {
         return response as AuthResponse;
       }),
       tap((response) => {
-        console.log('AuthService.login response:', response);
+
         this.setSession(response);
       })
     );
@@ -47,7 +47,7 @@ export class AuthService {
         return response as AuthResponse;
       }),
       tap((response) => {
-        console.log('AuthService.register response:', response);
+
         this.setSession(response);
       })
     );
@@ -64,13 +64,13 @@ export class AuthService {
   }
 
   private setSession(response: AuthResponse): void {
-    console.log('AuthService.setSession called with:', response);
+
     if (response.token) {
-      console.log('Setting token:', response.token);
+
       localStorage.setItem(this.TOKEN_KEY, response.token);
       this.isAuthenticated.set(true);
     } else {
-      console.warn('No token in response');
+
     }
     if (response.userId) {
       localStorage.setItem(this.USER_ID_KEY, response.userId.toString());

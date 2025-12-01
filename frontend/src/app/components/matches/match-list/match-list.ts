@@ -60,7 +60,7 @@ export class MatchListComponent implements OnInit {
       })
     ).subscribe({
       next: (data) => {
-        console.log('Matches loaded:', data);
+
         this.matches = data.content || [];
         this.totalPages = data.totalPages || 0;
         this.totalElements = data.totalElements || 0;
@@ -134,7 +134,7 @@ export class MatchListComponent implements OnInit {
         })
       ).subscribe({
         next: () => {
-          console.log('Exchange request created successfully');
+
         },
         error: (err) => {
           console.error('Error creating exchange requests', err);
@@ -145,7 +145,7 @@ export class MatchListComponent implements OnInit {
           }
         },
         complete: () => {
-          console.log('All exchange requests processed');
+
           // Refresh list or show success message
         }
       });

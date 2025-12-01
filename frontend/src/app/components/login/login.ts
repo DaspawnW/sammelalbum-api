@@ -27,19 +27,14 @@ export class LoginComponent {
   error = '';
 
   onSubmit() {
-    console.log('LoginComponent.onSubmit called');
     if (this.loginForm.valid) {
       this.error = '';
       const { username, password } = this.loginForm.value;
-      console.log('Form is valid, attempting login for:', username);
 
       if (username && password) {
         this.authService.login({ username, password }).subscribe({
           next: (res) => {
-            console.log('Login success, navigating to /', res);
-            this.router.navigate(['/']).then(success => {
-              console.log('Navigation result:', success);
-            });
+            this.router.navigate(['/']);
           },
           error: (err) => {
             this.error = 'AUTH.LOGIN.ERROR';
@@ -48,8 +43,6 @@ export class LoginComponent {
           }
         });
       }
-    } else {
-      console.log('Form is invalid', this.loginForm.errors);
     }
   }
 }

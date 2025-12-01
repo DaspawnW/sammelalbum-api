@@ -45,13 +45,13 @@ export class SearchListComponent implements OnInit {
   }
 
   loadSearches() {
-    console.log('SearchListComponent.loadSearches called');
+
     this.loading = true;
     from(this.api.invoke(getSearches)).subscribe({
       next: (data) => {
-        console.log('Searches loaded, raw data:', data);
+
         this.searches = data || [];
-        console.log('Searches array:', this.searches, 'Length:', this.searches.length);
+
         this.sortSearches(); // Apply default sort
         this.loading = false;
         this.cdr.detectChanges(); // Manually trigger change detection
@@ -95,7 +95,7 @@ export class SearchListComponent implements OnInit {
       body: { stickerIds }
     })).subscribe({
       next: (response) => {
-        console.log('Bulk searches created:', response);
+
         this.creating = false;
         this.closeCreateModal();
         this.loadSearches(); // Refresh the list

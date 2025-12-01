@@ -25,12 +25,12 @@ export class DashboardComponent implements OnInit {
   }
 
   loadUser() {
-    console.log('DashboardComponent.loadUser called');
+
     from(this.api.invoke(getMe)).subscribe({
       next: (data) => {
-        console.log('User data loaded:', data);
+
         this.user = data || null;
-        console.log('User set to:', this.user);
+
         this.cdr.detectChanges(); // Manually trigger change detection
       },
       error: (err: any) => {

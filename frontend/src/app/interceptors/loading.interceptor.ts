@@ -15,7 +15,6 @@ export const loadingInterceptor: HttpInterceptorFn = (req, next) => {
 
     // Show loading spinner
     try {
-        console.log(`LoadingInterceptor: Request started for ${req.url} (ID: ${requestId})`);
         loadingService.show(requestId);
     } catch (error) {
         console.error('Error showing loading spinner:', error);
@@ -24,14 +23,13 @@ export const loadingInterceptor: HttpInterceptorFn = (req, next) => {
     return next(req).pipe(
         finalize(() => {
             try {
-                console.log(`LoadingInterceptor: Request finalized for ${req.url} (ID: ${requestId})`);
                 loadingService.hide(requestId);
             } catch (error) {
                 console.error('Error hiding loading spinner:', error);
                 try {
                     loadingService.reset();
                 } catch (e) {
-                    console.error('Critical error resetting loading service:', e);
+                    // Suppress critical error
                 }
             }
         })

@@ -17,7 +17,6 @@ export class LoadingService {
         // Automatically clear loading state on navigation
         this.router.events.subscribe(event => {
             if (event instanceof NavigationStart) {
-                console.log('LoadingService: Navigation detected, resetting state');
                 this.reset();
             }
         });
@@ -30,7 +29,6 @@ export class LoadingService {
     show(requestId: string): void {
         try {
             this.activeRequests.add(requestId);
-            console.log(`LoadingService: show(${requestId}). Active requests: ${this.activeRequests.size}`);
 
             if (this.activeRequests.size > 0) {
                 this.loadingSubject.next(true);
@@ -42,7 +40,6 @@ export class LoadingService {
 
                 // Set safety timeout (10 seconds)
                 this.timeoutId = setTimeout(() => {
-                    console.warn('LoadingService: Safety timeout triggered (10s), resetting state');
                     this.reset();
                 }, 10000);
             }
@@ -60,9 +57,6 @@ export class LoadingService {
         try {
             if (this.activeRequests.has(requestId)) {
                 this.activeRequests.delete(requestId);
-                console.log(`LoadingService: hide(${requestId}). Active requests: ${this.activeRequests.size}`);
-            } else {
-                console.warn(`LoadingService: Attempted to hide unknown request ${requestId}`);
             }
 
             if (this.activeRequests.size === 0) {
@@ -83,7 +77,6 @@ export class LoadingService {
      */
     reset(): void {
         try {
-            console.log('LoadingService: Resetting state');
             this.activeRequests.clear();
             this.loadingSubject.next(false);
             if (this.timeoutId) {
@@ -95,7 +88,7 @@ export class LoadingService {
             try {
                 this.loadingSubject.next(false);
             } catch (e) {
-                console.error('Critical error in LoadingService.reset():', e);
+                // Critical error, suppress to avoid loop
             }
         }
     }

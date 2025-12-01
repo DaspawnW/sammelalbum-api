@@ -57,14 +57,14 @@ export class OfferListComponent implements OnInit {
   }
 
   loadOffers() {
-    console.log('OfferListComponent.loadOffers called');
+
     this.loading = true;
     from(this.api.invoke(getOffers)).subscribe({
       next: (data) => {
-        console.log('Offers loaded, raw data:', data);
-        console.log('Data type:', typeof data, 'Is Blob?', data instanceof Blob);
+
+
         this.offers = data || [];
-        console.log('Offers array:', this.offers, 'Length:', this.offers.length);
+
         this.sortOffers(); // Apply default sort
         this.loading = false;
         this.cdr.detectChanges(); // Manually trigger change detection
@@ -122,7 +122,7 @@ export class OfferListComponent implements OnInit {
       }
     })).subscribe({
       next: (response) => {
-        console.log('Bulk offers created:', response);
+
         this.creating = false;
         this.closeCreateModal();
         this.loadOffers(); // Refresh the list
