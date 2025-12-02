@@ -451,7 +451,8 @@ public class ExchangeService {
 
     private Map<Long, User> fetchPartners(List<ExchangeRequest> requests, Function<ExchangeRequest, Long> idExtractor) {
         Set<Long> partnerIds = requests.stream()
-                .filter(r -> r.getStatus() == ExchangeStatus.EXCHANGE_INTERREST)
+                .filter(r -> r.getStatus() == ExchangeStatus.EXCHANGE_INTERREST
+                        || r.getStatus() == ExchangeStatus.EXCHANGE_COMPLETED)
                 .map(idExtractor)
                 .collect(Collectors.toSet());
 
@@ -474,14 +475,14 @@ public class ExchangeService {
                 .status(request.getStatus())
                 .cancellationReason(request.getCancellationReason())
                 .createdAt(request.getCreatedAt())
-                .createdAt(request.getCreatedAt())
                 .updatedAt(request.getUpdatedAt())
                 .requesterClosed(request.getRequesterClosed())
                 .offererClosed(request.getOffererClosed())
                 .requestedStickerName(stickerNames.getOrDefault(request.getRequestedStickerId(), "Unknown"))
                 .offeredStickerName(stickerNames.getOrDefault(request.getOfferedStickerId(), null));
 
-        if (request.getStatus() == ExchangeStatus.EXCHANGE_INTERREST && partner != null) {
+        if (partner != null && (request.getStatus() == ExchangeStatus.EXCHANGE_INTERREST
+                || request.getStatus() == ExchangeStatus.EXCHANGE_COMPLETED)) {
             builder.partnerFirstname(partner.getFirstname());
             builder.partnerLastname(partner.getLastname());
             builder.partnerContact(partner.getContact());

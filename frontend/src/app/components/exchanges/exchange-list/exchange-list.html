@@ -379,15 +379,16 @@
 
                 <p style="font-size: 0.875rem; color: #6B7280;">
                     <strong style="color: #374151;">{{ 'EXCHANGES.TABLE.PARTNER_ID' | translate }}:</strong> {{
-                    selectedExchange.requesterId || selectedExchange.offererId }}
+                    userRole === 'requester' ? selectedExchange.offererId : selectedExchange.requesterId }}
                 </p>
                 <p style="font-size: 0.875rem; color: #6B7280;">
                     <strong style="color: #374151;">{{ 'EXCHANGES.TABLE.PARTNER' | translate }}:</strong> {{
                     selectedExchange.partnerFirstname }} {{ selectedExchange.partnerLastname }}
                 </p>
-                <p style="font-size: 0.875rem; color: #6B7280;" *ngIf="selectedExchange.partnerContact">
+                <p style="font-size: 0.875rem; color: #6B7280;"
+                    *ngIf="selectedExchange.status === 'EXCHANGE_INTERREST' || selectedExchange.status === 'EXCHANGE_COMPLETED'">
                     <strong style="color: #374151;">{{ 'EXCHANGE_MODAL.PARTNER_CONTACT' | translate }}:</strong> {{
-                    selectedExchange.partnerContact }}
+                    selectedExchange.partnerContact || '-' }}
                 </p>
                 <p style="font-size: 0.875rem; color: #6B7280;">
                     <strong style="color: #374151;">{{ 'EXCHANGES.TABLE.REQUESTED' | translate }}:</strong>
