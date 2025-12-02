@@ -66,7 +66,9 @@ public class ExchangeServiceNotificationTest {
         // Verify the message content
         List<String> messages = captor.getValue();
         assertEquals(1, messages.size());
-        String expectedMessage = "Tauschanfrage: Dein Sticker Sticker 1 (ID: 1) gegen Sticker Sticker 6 (ID: 6).";
+        String expectedMessage = "Tauschanfrage: Dein Sticker Sticker 1 (ID: 1) gegen Sticker Sticker 6 (ID: 6).\n\n" +
+                "Exchange Request: Your sticker Sticker 1 (ID: 1) for sticker Sticker 6 (ID: 6).\n\n" +
+                "Link: http://localhost:4200";
         assertEquals(expectedMessage, messages.get(0));
 
         // 2. Verify status is updated to MAIL_SEND
@@ -100,7 +102,9 @@ public class ExchangeServiceNotificationTest {
         List<String> messages = captor.getValue();
         assertEquals(1, messages.size());
         // Expected: "Anfrage (Freebie): Dein Sticker Sticker 1 (ID: 1) wird angefragt."
-        String expectedMessage = "Anfrage (Freebie): Dein Sticker Sticker 1 (ID: 1) wird angefragt.";
+        String expectedMessage = "Anfrage (Freebie): Dein Sticker Sticker 1 (ID: 1) wird angefragt.\n\n" +
+                "Request (Freebie): Your sticker Sticker 1 (ID: 1) is requested.\n\n" +
+                "Link: http://localhost:4200";
         assertEquals(expectedMessage, messages.get(0));
     }
 

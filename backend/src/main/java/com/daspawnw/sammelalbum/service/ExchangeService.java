@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.List;
 import java.util.Set;
@@ -36,6 +37,9 @@ public class ExchangeService {
     private final StickerRepository stickerRepository;
     private final NotificationService notificationService;
     private final UserRepository userRepository;
+
+    @Value("${app.base-url:http://localhost:4200}")
+    private String baseUrl;
 
     @Transactional
     public ExchangeRequest createExchangeRequest(Long requesterId, Long offererId, Long requestedStickerId,
@@ -255,8 +259,14 @@ public class ExchangeService {
                 .orElseThrow(() -> new IllegalStateException("Offerer user not found"));
 
         String message = String.format(
-                "Deine Tauschanfrage wurde akzeptiert!\n\nKontaktinformationen des Anbieters:\nVorname: %s\nNachname: %s\nKontakt: %s",
-                offerer.getFirstname(), offerer.getLastname(), offerer.getContact());
+                "Deine Tauschanfrage wurde akzeptiert!\n\nKontaktinformationen des Anbieters:\nVorname: %s\nNachname: %s\nKontakt: %s\n\n"
+                        +
+                        "Your exchange request has been accepted!\n\nProvider contact information:\nFirstname: %s\nLastname: %s\nContact: %s\n\n"
+                        +
+                        "Link: %s",
+                offerer.getFirstname(), offerer.getLastname(), offerer.getContact(),
+                offerer.getFirstname(), offerer.getLastname(), offerer.getContact(),
+                baseUrl);
 
         notificationService.sendExchangeNotification(request.getRequesterId(), List.of(message));
     }
@@ -388,23 +398,38 @@ public class ExchangeService {
                 .map(com.daspawnw.sammelalbum.model.Sticker::getName)
                 .orElse("Unknown");
 
+        String deMessage;
+        String enMessage;
+
         switch (request.getExchangeType()) {
             case FREEBIE:
-                return String.format("Anfrage (Freebie): Dein Sticker %s (ID: %d) wird angefragt.",
+                deMessage = String.format("Anfrage (Freebie): Dein Sticker %s (ID: %d) wird angefragt.",
                         requestedStickerName, request.getRequestedStickerId());
+                enMessage = String.format("Request (Freebie): Your sticker %s (ID: %d) is requested.",
+                        requestedStickerName, request.getRequestedStickerId());
+                break;
             case PAYED:
-                return String.format("Kaufanfrage: Dein Sticker %s (ID: %d) wird angefragt.",
+                deMessage = String.format("Kaufanfrage: Dein Sticker %s (ID: %d) wird angefragt.",
                         requestedStickerName, request.getRequestedStickerId());
+                enMessage = String.format("Purchase Request: Your sticker %s (ID: %d) is requested.",
+                        requestedStickerName, request.getRequestedStickerId());
+                break;
             case EXCHANGE:
                 String offeredStickerName = stickerRepository.findById(request.getOfferedStickerId())
                         .map(com.daspawnw.sammelalbum.model.Sticker::getName)
                         .orElse("Unknown");
-                return String.format("Tauschanfrage: Dein Sticker %s (ID: %d) gegen Sticker %s (ID: %d).",
+                deMessage = String.format("Tauschanfrage: Dein Sticker %s (ID: %d) gegen Sticker %s (ID: %d).",
                         requestedStickerName, request.getRequestedStickerId(),
                         offeredStickerName, request.getOfferedStickerId());
+                enMessage = String.format("Exchange Request: Your sticker %s (ID: %d) for sticker %s (ID: %d).",
+                        requestedStickerName, request.getRequestedStickerId(),
+                        offeredStickerName, request.getOfferedStickerId());
+                break;
             default:
                 return null;
         }
+
+        return deMessage + "\n\n" + enMessage + "\n\nLink: " + baseUrl;
     }
 
     public List<ExchangeRequestDto> getSentRequests(Long requesterId) {

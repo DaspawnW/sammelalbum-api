@@ -78,6 +78,11 @@ app:
     # - 'console': Logs emails to console (default, useful for dev/test)
     # - 'smtp': Sends real emails using Spring Mail (requires valid spring.mail properties)
     sender: console
+    # Default 'From' address for outgoing emails
+    from: noreply@sammelalbum.com
+  
+  # Base URL for the frontend application (used in emails)
+  base-url: http://localhost:4200
 
 springdoc:
   api-docs:
