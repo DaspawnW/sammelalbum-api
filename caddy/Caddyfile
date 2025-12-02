@@ -1,8 +1,62 @@
 {
     email {$ACME_EMAIL}
+    order rate_limit before basicauth
 }
 
 {$DOMAIN_NAME} {
+    encode gzip
+
+    # Global Rate Limiting
+    rate_limit {
+        zone global_zone {
+            key {remote_host}
+            events 100
+            window 1m
+        }
+    }
+
+    # Strict Rate Limiting for Login
+    @login {
+        method POST
+        path /api/auth/login
+    }
+    rate_limit @login {
+        zone login_zone {
+            key {remote_host}
+            events 5
+            window 1m
+        }
+    }
+
+    # Security: Block WordPress scanners
+    @wp-scan {
+        path_regexp wp /(wp-login\.php|wp-admin|wp-content|xmlrpc\.php)
+    }
+    respond @wp-scan 403
+
+    # Security: Block vulnerability scanners
+    @bad-paths {
+        path_regexp bad /(phpmyadmin|\.env|\.git|composer\.json)
+    }
+    respond @bad-paths 403
+
+    # Security: Block other common scanners and sensitive files
+    @block_scanners {
+        path *.php *.env *.git *.yml *.yaml
+        path /actuator* /jolokia* /pma*
+    }
+    respond @block_scanners 403
+
+    # Security: Block known malicious bots
+    @badbots {
+        header User-Agent *sqlmap*
+        header User-Agent *acunetix*
+        header User-Agent *nikto*
+        header User-Agent *nessus*
+        header User-Agent *wpscan*
+    }
+    respond @badbots 403
+
     tls {
         dns cloudflare {$CLOUDFLARE_API_TOKEN}
     }
