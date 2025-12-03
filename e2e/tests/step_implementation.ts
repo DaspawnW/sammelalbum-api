@@ -5,6 +5,7 @@ import { OffersPage } from "./pages/offers.page";
 import { SearchPage } from "./pages/search.page";
 import { MatchesPage } from "./pages/matches.page";
 import { ExchangesPage } from "./pages/exchanges.page";
+import { ProfilePage } from "./pages/profile.page";
 
 import { RegisterPage } from "./pages/register.page";
 
@@ -19,6 +20,7 @@ export default class StepImplementation {
     private static searchPage: SearchPage;
     private static matchesPage: MatchesPage;
     private static exchangesPage: ExchangesPage;
+    private static profilePage: ProfilePage;
 
     @BeforeSuite()
     public async beforeSuite() {
@@ -41,6 +43,7 @@ export default class StepImplementation {
         StepImplementation.searchPage = new SearchPage(StepImplementation.page);
         StepImplementation.matchesPage = new MatchesPage(StepImplementation.page);
         StepImplementation.exchangesPage = new ExchangesPage(StepImplementation.page);
+        StepImplementation.profilePage = new ProfilePage(StepImplementation.page);
 
         StepImplementation.page.on('console', msg => console.log(`BROWSER LOG: ${msg.text()}`));
     }
@@ -101,6 +104,9 @@ export default class StepImplementation {
     @Step("Navigate to <pageName> page")
     public async navigateTo(pageName: string) {
         switch (pageName) {
+            case "Dashboard":
+                await StepImplementation.page.goto('http://localhost:4200/dashboard');
+                break;
             case "Offers": await StepImplementation.offersPage.navigate(); break;
             case "Searches": await StepImplementation.searchPage.navigate(); break;
             case "Matches": await StepImplementation.matchesPage.navigate(); break;
@@ -276,5 +282,46 @@ export default class StepImplementation {
     @Step("Verify search for <stickerName> is deleted")
     public async verifySearchIsDeleted(stickerName: string) {
         await StepImplementation.searchPage.verifySearchNotExists(stickerName);
+    }
+
+    // --- Profile Management Steps ---
+    @Step("Open edit profile modal")
+    public async openEditProfileModal() {
+        await StepImplementation.profilePage.openEditProfileModal();
+    }
+
+    @Step("Update profile with firstname <firstname> and lastname <lastname>")
+    public async updateProfileName(firstname: string, lastname: string) {
+        await StepImplementation.profilePage.updateProfile({ firstname, lastname });
+    }
+
+    @Step("Update profile with contact <contact>")
+    public async updateProfileContact(contact: string) {
+        await StepImplementation.profilePage.updateProfile({ contact });
+    }
+
+    @Step("Verify profile data shows firstname <firstname> and lastname <lastname>")
+    public async verifyProfileName(firstname: string, lastname: string) {
+        await StepImplementation.profilePage.verifyProfileData({ firstname, lastname });
+    }
+
+    @Step("Verify profile data shows contact <contact>")
+    public async verifyProfileContact(contact: string) {
+        await StepImplementation.profilePage.verifyProfileData({ contact });
+    }
+
+    @Step("Open change password modal")
+    public async openChangePasswordModal() {
+        await StepImplementation.profilePage.openChangePasswordModal();
+    }
+
+    @Step("Change password from <currentPassword> to <newPassword>")
+    public async changePassword(currentPassword: string, newPassword: string) {
+        await StepImplementation.profilePage.changePassword(currentPassword, newPassword);
+    }
+
+    @Step("Verify password change success")
+    public async verifyPasswordChangeSuccess() {
+        await StepImplementation.profilePage.verifyPasswordChangeSuccess();
     }
 }

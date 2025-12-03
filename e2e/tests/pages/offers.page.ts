@@ -34,13 +34,8 @@ export class OffersPage extends BasePage {
             const checkbox = modal.locator(`label:has-text("${labelText}") input[type="checkbox"]`);
 
             const isChecked = await checkbox.isChecked();
-            console.log(`Checkbox "${labelText}" isChecked: ${isChecked}, shouldBe: ${shouldBeChecked}`);
-
             if (isChecked !== shouldBeChecked) {
                 await checkbox.click({ force: true });
-                // Verify it changed
-                const newChecked = await checkbox.isChecked();
-                console.log(`Checkbox "${labelText}" clicked. New state: ${newChecked}`);
             }
         };
 

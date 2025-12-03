@@ -1,8 +1,9 @@
 package com.daspawnw.sammelalbum.controller;
 
+import com.daspawnw.sammelalbum.dto.ChangePasswordRequest;
+import com.daspawnw.sammelalbum.dto.UpdateProfileRequest;
 import com.daspawnw.sammelalbum.dto.UserDto;
-import com.daspawnw.sammelalbum.model.User;
-import com.daspawnw.sammelalbum.repository.UserRepository;
+import com.daspawnw.sammelalbum.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -11,9 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import com.daspawnw.sammelalbum.security.CustomUserDetails;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/user")
@@ -22,24 +21,35 @@ import org.springframework.web.bind.annotation.RestController;
 @SecurityRequirement(name = "bearerAuth")
 public class UserController {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Operation(summary = "Get current user", description = "Retrieves the profile of the currently authenticated user")
     @ApiResponse(responseCode = "200", description = "User profile retrieved successfully")
     @ApiResponse(responseCode = "403", description = "User not authorized")
     @GetMapping("/me")
     public ResponseEntity<UserDto> getMe(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        User user = userRepository.findById(userDetails.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        UserDto userDto = UserDto.builder()
-                .id(user.getId())
-                .firstname(user.getFirstname())
-                .lastname(user.getLastname())
-                .mail(user.getMail())
-                .contact(user.getContact())
-                .build();
-
+        UserDto userDto = userService.getUserProfile(userDetails.getUserId());
         return ResponseEntity.ok(userDto);
+    }
+
+    @Operation(summary = "Update user profile", description = "Updates the profile information of the currently authenticated user")
+    @ApiResponse(responseCode = "200", description = "Profile updated successfully")
+    @ApiResponse(responseCode = "403", description = "User not authorized")
+    @PutMapping("/profile")
+    public ResponseEntity<Void> updateProfile(@AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestBody UpdateProfileRequest request) {
+        userService.updateProfile(userDetails.getUserId(), request);
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "Change password", description = "Changes the password of the currently authenticated user")
+    @ApiResponse(responseCode = "200", description = "Password changed successfully")
+    @ApiResponse(responseCode = "400", description = "Invalid current password")
+    @ApiResponse(responseCode = "403", description = "User not authorized")
+    @PutMapping("/password")
+    public ResponseEntity<Void> changePassword(@AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestBody ChangePasswordRequest request) {
+        userService.changePassword(userDetails.getUserId(), request);
+        return ResponseEntity.ok().build();
     }
 }

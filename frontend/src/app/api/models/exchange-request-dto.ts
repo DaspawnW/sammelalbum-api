@@ -7,6 +7,7 @@ export interface ExchangeRequestDto {
   exchangeType?: 'EXCHANGE' | 'PAYED' | 'FREEBIE';
   id?: number;
   offeredStickerId?: number;
+  offeredStickerName?: string;
   offererClosed?: boolean;
   offererId?: number;
   partnerContact?: string;
@@ -14,7 +15,6 @@ export interface ExchangeRequestDto {
   partnerLastname?: string;
   requestedStickerId?: number;
   requestedStickerName?: string;
-  offeredStickerName?: string;
   requesterClosed?: boolean;
   requesterId?: number;
   status?: 'INITIAL' | 'MAIL_SEND' | 'EXCHANGE_INTERREST' | 'EXCHANGE_COMPLETED' | 'EXCHANGE_CANCELED';

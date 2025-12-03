@@ -16,10 +16,6 @@ export class ExchangesPage extends BasePage {
                 await this.page.waitForSelector(`tr:has-text("${stickerName}")`, { timeout: 5000 });
             }
         } catch (e) {
-            console.log(`Request for ${stickerName} ${partnerName ? 'from ' + partnerName : ''} not found.`);
-            console.log("Visible rows:");
-            const rows = await this.page.locator('tr').allInnerTexts();
-            rows.forEach(row => console.log(row));
             throw e;
         }
     }

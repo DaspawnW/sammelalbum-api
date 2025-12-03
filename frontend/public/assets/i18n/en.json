@@ -29,11 +29,41 @@
         "SEARCHES": "My Searches",
         "MATCHES": "Matches",
         "EXCHANGES": "Exchanges",
-        "LOGOUT": "Sign out"
+        "LOGOUT": "Sign out",
+        "EDIT_PROFILE": "Edit Profile",
+        "EDIT_PASSWORD": "Edit Password"
+    },
+    "PROFILE": {
+        "TITLE": "Edit Profile",
+        "FIRSTNAME": "First Name",
+        "LASTNAME": "Last Name",
+        "EMAIL": "Email",
+        "CONTACT": "Contact Info",
+        "SAVE": "Save",
+        "CANCEL": "Cancel",
+        "SUCCESS": "Profile updated successfully",
+        "ERROR": "Error updating profile"
+    },
+    "PASSWORD": {
+        "TITLE": "Change Password",
+        "CURRENT_PASSWORD": "Current Password",
+        "NEW_PASSWORD": "New Password",
+        "CONFIRM_PASSWORD": "Confirm Password",
+        "SAVE": "Save",
+        "CANCEL": "Cancel",
+        "SUCCESS": "Password changed successfully",
+        "ERROR": "Error changing password",
+        "INVALID_CURRENT": "Current password is incorrect",
+        "MISMATCH": "Passwords do not match",
+        "MIN_LENGTH": "Password must be at least 6 characters"
+    },
+    "VALIDATION": {
+        "REQUIRED": "This field is required"
     },
     "COMMON": {
         "CANCEL": "Cancel",
-        "REMOVE": "Remove"
+        "REMOVE": "Remove",
+        "SAVING": "Saving..."
     },
     "AUTH": {
         "LOGIN": {

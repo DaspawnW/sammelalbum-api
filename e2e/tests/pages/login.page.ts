@@ -10,7 +10,13 @@ export class LoginPage extends BasePage {
     }
 
     async logout() {
-        await this.page.click('button:has-text("Abmelden")');
+        // Click the user menu button to open dropdown
+        await this.page.click('#user-menu-button');
+        // Wait for menu animation
+        await this.page.waitForTimeout(300);
+        // Click the logout link in the dropdown
+        await this.page.click('a:has-text("Abmelden")');
+        // Wait for redirect to welcome page
         await this.page.waitForURL('http://localhost:4200/welcome');
     }
 }
