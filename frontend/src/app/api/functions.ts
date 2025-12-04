@@ -45,6 +45,8 @@ export type { Register$Params as Register$Params } from './fn/authentication/reg
 export { register as register } from './fn/authentication/register';
 export type { Login$Params as Login$Params } from './fn/authentication/login';
 export { login as login } from './fn/authentication/login';
+export type { GetStatistics$Params as GetStatistics$Params } from './fn/statistics-controller/get-statistics';
+export { getStatistics as getStatistics } from './fn/statistics-controller/get-statistics';
 export type { GetPayedMatches$Params as GetPayedMatches$Params } from './fn/matches/get-payed-matches';
 export { getPayedMatches as getPayedMatches } from './fn/matches/get-payed-matches';
 export type { GetFreebieMatches$Params as GetFreebieMatches$Params } from './fn/matches/get-freebie-matches';

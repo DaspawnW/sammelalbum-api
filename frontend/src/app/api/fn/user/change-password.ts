@@ -10,7 +10,7 @@ import { RequestBuilder } from '../../request-builder';
 import { ChangePasswordRequest } from '../../models/change-password-request';
 
 export interface ChangePassword$Params {
-      body: ChangePasswordRequest
+  body: ChangePasswordRequest
 }
 
 export function changePassword(http: HttpClient, rootUrl: string, params: ChangePassword$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {

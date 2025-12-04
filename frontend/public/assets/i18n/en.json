@@ -135,6 +135,16 @@
             },
             "EMPTY_RECEIVED": "No received offers.",
             "EMPTY_SENT": "No sent requests."
+        },
+        "STATISTICS": {
+            "TITLE": "Statistics",
+            "OFFERS_TITLE": "Offers",
+            "SEARCHES_TITLE": "Searches",
+            "TOTAL_OFFERS": "Offers",
+            "FREE": "Free",
+            "EXCHANGE": "Exchange",
+            "PAID": "Paid",
+            "TOTAL_SEARCHES": "Search Requests"
         }
     },
     "EXCHANGES": {

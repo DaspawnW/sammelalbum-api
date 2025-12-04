@@ -10,7 +10,7 @@ import { RequestBuilder } from '../../request-builder';
 import { UpdateProfileRequest } from '../../models/update-profile-request';
 
 export interface UpdateProfile$Params {
-      body: UpdateProfileRequest
+  body: UpdateProfileRequest
 }
 
 export function updateProfile(http: HttpClient, rootUrl: string, params: UpdateProfile$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {

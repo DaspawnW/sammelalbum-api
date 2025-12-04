@@ -111,6 +111,16 @@
             "TITLE": "Tauschanfragen",
             "DESC": "Verfolgen Sie Ihre Tauschanfragen",
             "ACTION": "Tauschanfragen ansehen"
+        },
+        "STATISTICS": {
+            "TITLE": "Statistiken",
+            "OFFERS_TITLE": "Angebote",
+            "SEARCHES_TITLE": "Gesuche",
+            "TOTAL_OFFERS": "Angebote",
+            "FREE": "Gratis",
+            "EXCHANGE": "Tausch",
+            "PAID": "Bezahlt",
+            "TOTAL_SEARCHES": "Suchanfragen"
         }
     },
     "OFFERS": {
