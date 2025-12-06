@@ -41,10 +41,14 @@ export type { RemoveBulkSearches$Params as RemoveBulkSearches$Params } from './f
 export { removeBulkSearches as removeBulkSearches } from './fn/card-search/remove-bulk-searches';
 export type { DeleteSearch$Params as DeleteSearch$Params } from './fn/card-search/delete-search';
 export { deleteSearch as deleteSearch } from './fn/card-search/delete-search';
+export type { ResetPassword$Params as ResetPassword$Params } from './fn/authentication/reset-password';
+export { resetPassword as resetPassword } from './fn/authentication/reset-password';
 export type { Register$Params as Register$Params } from './fn/authentication/register';
 export { register as register } from './fn/authentication/register';
 export type { Login$Params as Login$Params } from './fn/authentication/login';
 export { login as login } from './fn/authentication/login';
+export type { ForgotPassword$Params as ForgotPassword$Params } from './fn/authentication/forgot-password';
+export { forgotPassword as forgotPassword } from './fn/authentication/forgot-password';
 export type { GetStatistics$Params as GetStatistics$Params } from './fn/statistics-controller/get-statistics';
 export { getStatistics as getStatistics } from './fn/statistics-controller/get-statistics';
 export type { GetPayedMatches$Params as GetPayedMatches$Params } from './fn/matches/get-payed-matches';

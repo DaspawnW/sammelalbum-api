@@ -72,7 +72,34 @@
             "PASSWORD": "Password",
             "SUBMIT": "Sign in",
             "REGISTER_LINK": "Don't have an account? Register",
+            "FORGOT_PASSWORD_LINK": "Forgot Password?",
             "ERROR": "Invalid username or password"
+        },
+        "FORGOT_PASSWORD": {
+            "TITLE": "Forgot Password?",
+            "SUBTITLE": "Reset your password",
+            "IDENTIFIER": "Username or Email",
+            "IDENTIFIER_PLACEHOLDER": "Enter your username or email",
+            "SUBMIT": "Request Link",
+            "SUBMITTING": "Sending...",
+            "SUCCESS": "If an account with these credentials exists, you will receive an email within the next 4 minutes with a link to reset your password.",
+            "ERROR": "Error sending request. Please try again.",
+            "LOGIN_LINK": "Back to Login"
+        },
+        "RESET_PASSWORD": {
+            "TITLE": "Reset Password",
+            "SUBTITLE": "Set your new password",
+            "PASSWORD": "New Password",
+            "CONFIRM_PASSWORD": "Confirm Password",
+            "PASSWORD_PLACEHOLDER": "Enter your new password",
+            "CONFIRM_PASSWORD_PLACEHOLDER": "Confirm your password",
+            "SUBMIT": "Reset Password",
+            "SUBMITTING": "Resetting...",
+            "SUCCESS": "Your password has been successfully reset. You will be redirected to the login page shortly.",
+            "ERROR": "Error resetting password. The link may have expired.",
+            "PASSWORDS_MUST_MATCH": "Passwords must match",
+            "PASSWORD_MIN_LENGTH": "Password must be at least 8 characters long",
+            "INVALID_TOKEN": "Invalid or expired link"
         },
         "REGISTER": {
             "TITLE": "Create your account",

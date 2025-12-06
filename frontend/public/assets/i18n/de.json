@@ -72,7 +72,34 @@
             "PASSWORD": "Passwort",
             "SUBMIT": "Anmelden",
             "REGISTER_LINK": "Noch kein Konto? Registrieren",
+            "FORGOT_PASSWORD_LINK": "Passwort vergessen?",
             "ERROR": "Ungültiger Benutzername oder Passwort"
+        },
+        "FORGOT_PASSWORD": {
+            "TITLE": "Passwort vergessen?",
+            "SUBTITLE": "Passwort zurücksetzen",
+            "IDENTIFIER": "Benutzername oder E-Mail",
+            "IDENTIFIER_PLACEHOLDER": "Geben Sie Ihren Benutzernamen oder E-Mail ein",
+            "SUBMIT": "Link anfordern",
+            "SUBMITTING": "Wird gesendet...",
+            "SUCCESS": "Falls ein Konto mit diesen Daten existiert, erhalten Sie in den nächsten 4 Minuten eine E-Mail mit einem Link zum Zurücksetzen Ihres Passworts.",
+            "ERROR": "Fehler beim Senden der Anfrage. Bitte versuchen Sie es erneut.",
+            "LOGIN_LINK": "Zurück zur Anmeldung"
+        },
+        "RESET_PASSWORD": {
+            "TITLE": "Passwort zurücksetzen",
+            "SUBTITLE": "Neues Passwort festlegen",
+            "PASSWORD": "Neues Passwort",
+            "CONFIRM_PASSWORD": "Passwort bestätigen",
+            "PASSWORD_PLACEHOLDER": "Geben Sie Ihr neues Passwort ein",
+            "CONFIRM_PASSWORD_PLACEHOLDER": "Bestätigen Sie Ihr Passwort",
+            "SUBMIT": "Passwort zurücksetzen",
+            "SUBMITTING": "Wird zurückgesetzt...",
+            "SUCCESS": "Ihr Passwort wurde erfolgreich zurückgesetzt. Sie werden in Kürze zur Anmeldeseite weitergeleitet.",
+            "ERROR": "Fehler beim Zurücksetzen des Passworts. Der Link könnte abgelaufen sein.",
+            "PASSWORDS_MUST_MATCH": "Passwörter müssen übereinstimmen",
+            "PASSWORD_MIN_LENGTH": "Passwort muss mindestens 8 Zeichen lang sein",
+            "INVALID_TOKEN": "Ungültiger oder abgelaufener Link"
         },
         "REGISTER": {
             "TITLE": "Konto erstellen",

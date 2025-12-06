@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './components/login/login';
 import { RegisterComponent } from './components/register/register';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password';
+import { ResetPasswordComponent } from './components/reset-password/reset-password';
 import { MainLayoutComponent } from './components/layout/main-layout/main-layout';
 import { DashboardComponent } from './components/dashboard/dashboard';
 import { OfferListComponent } from './components/cards/offer-list/offer-list';
@@ -16,6 +18,8 @@ export const routes: Routes = [
     { path: 'welcome', component: LandingPageComponent, canActivate: [noAuthGuard] },
     { path: 'login', component: LoginComponent, canActivate: [noAuthGuard] },
     { path: 'register', component: RegisterComponent, canActivate: [noAuthGuard] },
+    { path: 'forgot-password', component: ForgotPasswordComponent, canActivate: [noAuthGuard] },
+    { path: 'password-reset', component: ResetPasswordComponent, canActivate: [noAuthGuard] },
     { path: 'imprint', loadComponent: () => import('./components/legal/imprint/imprint').then(m => m.ImprintComponent) },
     { path: 'privacy', loadComponent: () => import('./components/legal/data-privacy/data-privacy').then(m => m.DataPrivacyComponent) },
     {
