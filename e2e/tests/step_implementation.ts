@@ -6,7 +6,8 @@ import { SearchPage } from "./pages/search.page";
 import { MatchesPage } from "./pages/matches.page";
 import { ExchangesPage } from "./pages/exchanges.page";
 import { ProfilePage } from "./pages/profile.page";
-
+import { ForgotPasswordPage } from "./pages/forgot-password.page";
+import { ResetPasswordPage } from "./pages/reset-password.page";
 import { RegisterPage } from "./pages/register.page";
 
 export default class StepImplementation {
@@ -21,6 +22,13 @@ export default class StepImplementation {
     private static matchesPage: MatchesPage;
     private static exchangesPage: ExchangesPage;
     private static profilePage: ProfilePage;
+    private static forgotPasswordPage: ForgotPasswordPage;
+    private static resetPasswordPage: ResetPasswordPage;
+
+    // Store token for password reset tests
+    private static passwordResetToken: string = '';
+    // Track last registered username for dynamic token generation
+    private static lastRegisteredUsername: string = '';
 
     @BeforeSuite()
     public async beforeSuite() {
@@ -44,6 +52,8 @@ export default class StepImplementation {
         StepImplementation.matchesPage = new MatchesPage(StepImplementation.page);
         StepImplementation.exchangesPage = new ExchangesPage(StepImplementation.page);
         StepImplementation.profilePage = new ProfilePage(StepImplementation.page);
+        StepImplementation.forgotPasswordPage = new ForgotPasswordPage(StepImplementation.page);
+        StepImplementation.resetPasswordPage = new ResetPasswordPage(StepImplementation.page);
 
         StepImplementation.page.on('console', msg => console.log(`BROWSER LOG: ${msg.text()}`));
     }
@@ -93,6 +103,8 @@ export default class StepImplementation {
             lastname: 'User',
             contact: `${username}@example.com`
         });
+        // Track the last registered username for password reset token generation
+        StepImplementation.lastRegisteredUsername = username;
     }
 
     @Step("Logout")
@@ -323,5 +335,91 @@ export default class StepImplementation {
     @Step("Verify password change success")
     public async verifyPasswordChangeSuccess() {
         await StepImplementation.profilePage.verifyPasswordChangeSuccess();
+    }
+
+    // --- Password Reset Steps ---
+    @Step("Navigate to forgot password page")
+    public async navigateToForgotPassword() {
+        await StepImplementation.forgotPasswordPage.navigate();
+    }
+
+    @Step("Request password reset for <identifier>")
+    public async requestPasswordReset(identifier: string) {
+        await StepImplementation.forgotPasswordPage.requestPasswordReset(identifier);
+    }
+
+    @Step("Verify password reset request success message")
+    public async verifyPasswordResetRequestSuccess() {
+        await StepImplementation.forgotPasswordPage.verifySuccessMessage();
+    }
+
+    @Step("Generate password reset token for user <username>")
+    public async generatePasswordResetToken(username: string) {
+        // Generate a password reset token using the same JWT secret as the backend
+        // This matches the implementation in PasswordResetTokenService.java
+        const jwt = require('jsonwebtoken');
+
+        // Secret from application.yaml: app.jwt.password-reset-secret
+        const passwordResetSecret = 'R9mPX2vYq8wB5nZt7cKjH4fL6gD3sA1eU0iO9pMxN8y=';
+
+        // Expiration: 2 hours (7200000 ms) from application.yaml
+        const expirationTime = 7200000;
+
+        const token = jwt.sign(
+            {}, // empty claims, just like the Java implementation
+            Buffer.from(passwordResetSecret, 'base64'), // decode base64 secret
+            {
+                algorithm: 'HS256',
+                subject: username,
+                expiresIn: Math.floor(expirationTime / 1000) // convert ms to seconds
+            }
+        );
+
+        StepImplementation.passwordResetToken = token;
+        console.log(`Generated password reset token for user: ${username}`);
+    }
+
+    @Step("Navigate to reset password page with token <token>")
+    public async navigateToResetPasswordWithToken(token: string) {
+        const actualToken = token === 'token' ? StepImplementation.passwordResetToken : token;
+        await StepImplementation.resetPasswordPage.navigateWithToken(actualToken);
+    }
+
+    @Step("Reset password to <newPassword>")
+    public async resetPassword(newPassword: string) {
+        await StepImplementation.resetPasswordPage.resetPassword(newPassword);
+    }
+
+    @Step("Verify password reset success message")
+    public async verifyPasswordResetSuccess() {
+        await StepImplementation.resetPasswordPage.verifySuccessMessage();
+    }
+
+    @Step("Wait for redirect to login page")
+    public async waitForRedirectToLogin() {
+        await StepImplementation.resetPasswordPage.waitForRedirectToLogin();
+    }
+
+    @Step("Verify invalid token error is displayed")
+    public async verifyInvalidTokenError() {
+        await StepImplementation.resetPasswordPage.verifyInvalidTokenError();
+    }
+
+    @Step("Enter password <password> and confirm password <confirmPassword>")
+    public async enterPasswords(password: string, confirmPassword: string) {
+        await StepImplementation.page.fill('input[formControlName="password"]', password);
+        await StepImplementation.page.fill('input[formControlName="confirmPassword"]', confirmPassword);
+        // Blur the fields to trigger validation
+        await StepImplementation.page.locator('input[formControlName="confirmPassword"]').blur();
+    }
+
+    @Step("Verify password too short error")
+    public async verifyPasswordTooShortError() {
+        await StepImplementation.resetPasswordPage.verifyPasswordTooShortError();
+    }
+
+    @Step("Verify password mismatch error")
+    public async verifyPasswordMismatchError() {
+        await StepImplementation.resetPasswordPage.verifyPasswordMismatchError();
     }
 }
