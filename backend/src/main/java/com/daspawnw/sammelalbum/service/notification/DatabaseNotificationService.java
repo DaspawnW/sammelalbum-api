@@ -7,7 +7,6 @@ import com.daspawnw.sammelalbum.repository.EmailOutboxRepository;
 import com.daspawnw.sammelalbum.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +23,7 @@ public class DatabaseNotificationService implements NotificationService {
     @Override
     @Transactional
     public void sendExchangeNotification(Long offererId, List<String> messages) {
-        log.info("Persisting notification for Offerer ID: {}", offererId);
+        log.info("Persisting exchange notification for Offerer ID: {}", offererId);
 
         String recipientEmail = userRepository.findById(offererId)
                 .map(User::getMail)
@@ -40,6 +39,26 @@ public class DatabaseNotificationService implements NotificationService {
                 .build();
 
         emailOutboxRepository.save(email);
-        log.info("Notification persisted with ID: {}", email.getId());
+        log.info("Exchange notification persisted with ID: {}", email.getId());
+    }
+
+    @Override
+    @Transactional
+    public void sendPasswordResetNotification(Long userId, String message) {
+        log.info("Persisting password reset notification for User ID: {}", userId);
+
+        String recipientEmail = userRepository.findById(userId)
+                .map(User::getMail)
+                .orElseThrow(() -> new IllegalArgumentException("User not found for ID: " + userId));
+
+        EmailOutbox email = EmailOutbox.builder()
+                .recipientEmail(recipientEmail)
+                .subject("Passwort zurücksetzen / Password Reset")
+                .body(message)
+                .status(EmailStatus.PENDING)
+                .build();
+
+        emailOutboxRepository.save(email);
+        log.info("Password reset notification persisted with ID: {}", email.getId());
     }
 }

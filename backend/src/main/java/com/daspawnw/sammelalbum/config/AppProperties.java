@@ -13,11 +13,14 @@ public class AppProperties {
     private List<String> validationCodes;
     private JwtProperties jwt;
     private MailProperties mail;
+    private String baseUrl;
 
     @Data
     public static class JwtProperties {
         private String secret;
         private Long expiration;
+        private String passwordResetSecret;
+        private Long passwordResetExpiration;
     }
 
     @Data

@@ -66,6 +66,10 @@ app:
     secret: K7gNU3kef8297wnsJvbdw/Ba49bmGW76NFh70fE0ZeM=
     # Token expiration time in milliseconds (86400000 ms = 24 hours)
     expiration: 86400000
+    # Password reset token secret (separate from login secret for security)
+    password-reset-secret: R9mPX2vYq8wB5nZt7cKjH4fL6gD3sA1eU0iO9pMxN8y=
+    # Password reset token expiration (7200000 ms = 2 hours)
+    password-reset-expiration: 7200000
   
   # CORS Configuration
   cors:
