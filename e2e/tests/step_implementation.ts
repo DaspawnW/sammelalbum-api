@@ -422,4 +422,30 @@ export default class StepImplementation {
     public async verifyPasswordMismatchError() {
         await StepImplementation.resetPasswordPage.verifyPasswordMismatchError();
     }
+
+    // --- User Deletion Steps ---
+    @Step("Open delete account modal")
+    public async openDeleteAccountModal() {
+        await StepImplementation.profilePage.openDeleteAccountModal();
+    }
+
+    @Step("Confirm account deletion")
+    public async confirmAccountDeletion() {
+        await StepImplementation.profilePage.confirmAccountDeletion();
+    }
+
+    @Step("Verify user is logged out")
+    public async verifyUserIsLoggedOut() {
+        await StepImplementation.loginPage.verifyLoggedOut();
+    }
+
+    @Step("Attempt to login as <username> with password <password>")
+    public async attemptLogin(username: string, password: string) {
+        await StepImplementation.loginPage.attemptLogin(username, password);
+    }
+
+    @Step("Verify login fails with error message")
+    public async verifyLoginFails() {
+        await StepImplementation.loginPage.verifyLoginError();
+    }
 }

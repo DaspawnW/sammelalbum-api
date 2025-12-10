@@ -3,6 +3,7 @@ package com.daspawnw.sammelalbum.controller;
 import com.daspawnw.sammelalbum.dto.ChangePasswordRequest;
 import com.daspawnw.sammelalbum.dto.UpdateProfileRequest;
 import com.daspawnw.sammelalbum.dto.UserDto;
+import com.daspawnw.sammelalbum.service.UserDeletionService;
 import com.daspawnw.sammelalbum.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final UserDeletionService userDeletionService;
 
     @Operation(summary = "Get current user", description = "Retrieves the profile of the currently authenticated user")
     @ApiResponse(responseCode = "200", description = "User profile retrieved successfully")
@@ -51,5 +53,14 @@ public class UserController {
             @RequestBody ChangePasswordRequest request) {
         userService.changePassword(userDetails.getUserId(), request);
         return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "Delete current user", description = "Permanently deletes the authenticated user's account and all associated data. This action cannot be undone.")
+    @ApiResponse(responseCode = "204", description = "User deleted successfully")
+    @ApiResponse(responseCode = "403", description = "User not authorized")
+    @DeleteMapping("/me")
+    public ResponseEntity<Void> deleteMe(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        userDeletionService.deleteUser(userDetails.getUserId());
+        return ResponseEntity.noContent().build();
     }
 }

@@ -31,7 +31,8 @@
         "EXCHANGES": "Exchanges",
         "LOGOUT": "Sign out",
         "EDIT_PROFILE": "Edit Profile",
-        "EDIT_PASSWORD": "Edit Password"
+        "EDIT_PASSWORD": "Edit Password",
+        "DELETE_ACCOUNT": "Delete Account"
     },
     "PROFILE": {
         "TITLE": "Edit Profile",
@@ -64,6 +65,14 @@
         "CANCEL": "Cancel",
         "REMOVE": "Remove",
         "SAVING": "Saving..."
+    },
+    "DELETE_ACCOUNT": {
+        "TITLE": "Delete Account",
+        "WARNING": "Are you sure you want to permanently delete your account? This action cannot be undone.",
+        "CONFIRMATION_TEXT": "All your data, including offers, searches, and exchange history, will be permanently deleted.",
+        "CONFIRM_BUTTON": "Yes, delete account",
+        "CANCEL_BUTTON": "Cancel",
+        "DELETING": "Deleting..."
     },
     "AUTH": {
         "LOGIN": {

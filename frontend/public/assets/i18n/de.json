@@ -31,7 +31,8 @@
         "EXCHANGES": "Tauschanfragen",
         "LOGOUT": "Abmelden",
         "EDIT_PROFILE": "Profil bearbeiten",
-        "EDIT_PASSWORD": "Passwort ändern"
+        "EDIT_PASSWORD": "Passwort ändern",
+        "DELETE_ACCOUNT": "Account löschen"
     },
     "PROFILE": {
         "TITLE": "Profil bearbeiten",
@@ -64,6 +65,14 @@
         "CANCEL": "Abbrechen",
         "REMOVE": "Entfernen",
         "SAVING": "Speichern..."
+    },
+    "DELETE_ACCOUNT": {
+        "TITLE": "Account löschen",
+        "WARNING": "Sind Sie sicher, dass Sie Ihren Account unwiderruflich löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
+        "CONFIRMATION_TEXT": "Alle Ihre Daten, einschließlich Angebote, Suchanfragen und Tauschhistorie, werden permanent gelöscht.",
+        "CONFIRM_BUTTON": "Ja, Account löschen",
+        "CANCEL_BUTTON": "Abbrechen",
+        "DELETING": "Wird gelöscht..."
     },
     "AUTH": {
         "LOGIN": {

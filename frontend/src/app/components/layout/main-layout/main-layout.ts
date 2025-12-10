@@ -5,13 +5,14 @@ import { AuthService } from '../../../services/auth.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { EditProfileModalComponent } from '../../modals/edit-profile-modal/edit-profile-modal';
 import { EditPasswordModalComponent } from '../../modals/edit-password-modal/edit-password-modal';
+import { DeleteAccountModalComponent } from '../../modals/delete-account-modal/delete-account-modal';
 import { UserService } from '../../../services/user.service';
 import { UserDto } from '../../../api/models/user-dto';
 
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslateModule, EditProfileModalComponent, EditPasswordModalComponent],
+  imports: [CommonModule, RouterModule, TranslateModule, EditProfileModalComponent, EditPasswordModalComponent, DeleteAccountModalComponent],
   templateUrl: './main-layout.html',
   styleUrl: './main-layout.css'
 })
@@ -25,6 +26,7 @@ export class MainLayoutComponent implements OnInit {
   userMenuOpen = false;
   editProfileModalOpen = false;
   editPasswordModalOpen = false;
+  deleteAccountModalOpen = false;
   currentUser: UserDto | null = null;
 
   @ViewChild('userMenuContainer') userMenuContainer!: ElementRef;
@@ -88,6 +90,25 @@ export class MainLayoutComponent implements OnInit {
   editPassword() {
     this.closeUserMenu();
     this.openEditPasswordModal();
+  }
+
+  deleteAccount() {
+    this.closeUserMenu();
+    setTimeout(() => {
+      this.deleteAccountModalOpen = true;
+      this.cdr.detectChanges();
+    }, 100);
+  }
+
+  closeDeleteAccountModal() {
+    this.deleteAccountModalOpen = false;
+  }
+
+  onAccountDeleted() {
+    this.closeDeleteAccountModal();
+    // Logout user after account deletion
+    this.authService.logout();
+    this.router.navigate(['/welcome']);
   }
 
   logout() {

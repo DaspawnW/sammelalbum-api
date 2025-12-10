@@ -19,13 +19,16 @@ import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.daspawnw.sammelalbum.security.CustomUserDetails;
+import com.daspawnw.sammelalbum.model.*;
 import java.util.Collections;
 
 @SpringBootTest(properties = {
@@ -65,6 +68,9 @@ class UserControllerTest {
 
         @Autowired
         private com.daspawnw.sammelalbum.repository.EmailOutboxRepository emailOutboxRepository;
+
+        @Autowired
+        private com.daspawnw.sammelalbum.repository.StickerRepository stickerRepository;
 
         @BeforeEach
         void setUp() {
@@ -190,5 +196,148 @@ class UserControllerTest {
         void getMe_ShouldReturn401_WhenUnauthenticated() throws Exception {
                 mockMvc.perform(get("/api/user/me"))
                                 .andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        void deleteMe_ShouldDeleteUser_WhenAuthenticated() throws Exception {
+                // Given: Create user with offers and searches
+                User user = User.builder()
+                                .firstname("Test")
+                                .lastname("User")
+                                .mail("test@example.com")
+                                .build();
+
+                Credentials credentials = Credentials.builder()
+                                .username("testuser")
+                                .passwordHash(passwordEncoder.encode("password"))
+                                .user(user)
+                                .build();
+                credentialsRepository.save(credentials);
+                Long userId = credentials.getUser().getId();
+
+                // Create stickers
+                Sticker sticker1 = Sticker.builder().id(1L).name("Sticker 1").build();
+                Sticker sticker2 = Sticker.builder().id(2L).name("Sticker 2").build();
+                stickerRepository.save(sticker1);
+                stickerRepository.save(sticker2);
+
+                // Create offers and searches
+                CardOffer offer = CardOffer.builder()
+                                .userId(userId)
+                                .stickerId(sticker1.getId())
+                                .offerFreebie(true)
+                                .isReserved(false)
+                                .build();
+                cardOfferRepository.save(offer);
+
+                CardSearch search = CardSearch.builder()
+                                .userId(userId)
+                                .stickerId(sticker2.getId())
+                                .isReserved(false)
+                                .build();
+                cardSearchRepository.save(search);
+
+                CustomUserDetails userDetails = new CustomUserDetails(
+                                "testuser", "password", Collections.emptyList(), userId);
+                String token = "Bearer " + jwtService.generateToken(userDetails, userId);
+
+                // When: Delete user
+                mockMvc.perform(delete("/api/user/me")
+                                .header("Authorization", token))
+                                .andExpect(status().isNoContent());
+
+                // Then: Verify user and all data is deleted
+                assertFalse(userRepository.existsById(userId));
+                assertFalse(credentialsRepository.findByUserId(userId).isPresent());
+                assertEquals(0, cardOfferRepository.findAllByUserId(userId).size());
+                assertEquals(0, cardSearchRepository.findAllByUserId(userId).size());
+        }
+
+        @Test
+        void deleteMe_ShouldReturn401_WhenUnauthenticated() throws Exception {
+                mockMvc.perform(delete("/api/user/me"))
+                                .andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        void deleteMe_ShouldCloseExchanges_WhenUserHasActiveExchanges() throws Exception {
+                // Given: Create two users
+                User user1 = User.builder()
+                                .firstname("User")
+                                .lastname("One")
+                                .mail("user1@example.com")
+                                .build();
+
+                Credentials credentials1 = Credentials.builder()
+                                .username("user1")
+                                .passwordHash(passwordEncoder.encode("password"))
+                                .user(user1)
+                                .build();
+                credentialsRepository.save(credentials1);
+                Long userId1 = credentials1.getUser().getId();
+
+                User user2 = User.builder()
+                                .firstname("User")
+                                .lastname("Two")
+                                .mail("user2@example.com")
+                                .build();
+
+                Credentials credentials2 = Credentials.builder()
+                                .username("user2")
+                                .passwordHash(passwordEncoder.encode("password"))
+                                .user(user2)
+                                .build();
+                credentialsRepository.save(credentials2);
+                Long userId2 = credentials2.getUser().getId();
+
+                // Create stickers
+                Sticker sticker1 = Sticker.builder().id(1L).name("Sticker 1").build();
+                stickerRepository.save(sticker1);
+
+                // Create offers and searches
+                CardOffer user1Offer = CardOffer.builder()
+                                .userId(userId1)
+                                .stickerId(sticker1.getId())
+                                .offerFreebie(true)
+                                .isReserved(true)
+                                .build();
+                cardOfferRepository.save(user1Offer);
+
+                CardSearch user2Search = CardSearch.builder()
+                                .userId(userId2)
+                                .stickerId(sticker1.getId())
+                                .isReserved(true)
+                                .build();
+                cardSearchRepository.save(user2Search);
+
+                // Create exchange in EXCHANGE_INTERREST status
+                ExchangeRequest exchange = ExchangeRequest.builder()
+                                .requesterId(userId2)
+                                .offererId(userId1)
+                                .requestedStickerId(sticker1.getId())
+                                .exchangeType(ExchangeType.FREEBIE)
+                                .status(ExchangeStatus.EXCHANGE_INTERREST)
+                                .offererCardOfferId(user1Offer.getId())
+                                .requesterCardSearchId(user2Search.getId())
+                                .build();
+                exchangeRequestRepository.save(exchange);
+
+                CustomUserDetails userDetails = new CustomUserDetails(
+                                "user1", "password", Collections.emptyList(), userId1);
+                String token = "Bearer " + jwtService.generateToken(userDetails, userId1);
+
+                // When: Delete user1
+                mockMvc.perform(delete("/api/user/me")
+                                .header("Authorization", token))
+                                .andExpect(status().isNoContent());
+
+                // Then: Verify exchange is deleted and user2's search is unreserved
+                assertFalse(exchangeRequestRepository.findById(exchange.getId()).isPresent());
+
+                CardSearch unreservedSearch = cardSearchRepository.findById(user2Search.getId()).orElseThrow();
+                assertFalse(unreservedSearch.getIsReserved());
+
+                // Verify user1 is deleted
+                assertFalse(userRepository.existsById(userId1));
         }
 }

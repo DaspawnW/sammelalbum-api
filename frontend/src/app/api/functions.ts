@@ -7,6 +7,8 @@ export type { ChangePassword$Params as ChangePassword$Params } from './fn/user/c
 export { changePassword as changePassword } from './fn/user/change-password';
 export type { GetMe$Params as GetMe$Params } from './fn/user/get-me';
 export { getMe as getMe } from './fn/user/get-me';
+export type { DeleteMe$Params as DeleteMe$Params } from './fn/user/delete-me';
+export { deleteMe as deleteMe } from './fn/user/delete-me';
 export type { DeclineExchangeRequest$Params as DeclineExchangeRequest$Params } from './fn/exchanges/decline-exchange-request';
 export { declineExchangeRequest as declineExchangeRequest } from './fn/exchanges/decline-exchange-request';
 export type { CloseExchangeRequest$Params as CloseExchangeRequest$Params } from './fn/exchanges/close-exchange-request';

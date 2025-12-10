@@ -99,4 +99,22 @@ export class ProfilePage extends BasePage {
             throw new Error('Password change modal is still visible - change may have failed');
         }
     }
+
+    async openDeleteAccountModal() {
+        // Click user menu button
+        await this.page.click('#user-menu-button');
+        // Wait for menu to open
+        await this.page.waitForTimeout(300);
+        // Click "Account löschen" option
+        await this.page.click('a:has-text("Account löschen")');
+        // Wait for modal to appear
+        await this.page.waitForTimeout(500);
+    }
+
+    async confirmAccountDeletion() {
+        // Click the confirmation button in the delete account modal
+        await this.page.click('button:has-text("Ja, Account löschen")');
+        // Wait for deletion to complete and redirect
+        await this.page.waitForTimeout(2000);
+    }
 }
